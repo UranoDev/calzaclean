@@ -236,6 +236,13 @@ Tres cosas que se pasan por alto:
   **no se copia**.
 - **`APP_TIMEZONE`.** Sin ella, el Panel muestra el día siguiente a partir de las seis
   de la tarde.
+- **El bloque `DB_` completo, sin comentar.** Si falta `DB_CONNECTION` —o si quedó
+  comentada mientras se probaba otra cosa— **Laravel no falla: cae en silencio a
+  SQLite**, crea `database/database.sqlite` y sirve el sitio contra una base vacía. El
+  error que aparece es `no such table: negocios`, que hace pensar en migraciones sin
+  correr cuando el problema es la conexión. Ante ese error, lo primero es
+  `php artisan tinker --execute 'echo config("database.default");'`: si responde
+  `sqlite`, es esto.
 
 Después:
 
