@@ -236,6 +236,19 @@ Tres cosas que se pasan por alto:
   **no se copia**.
 - **`APP_TIMEZONE`.** Sin ella, el Panel muestra el día siguiente a partir de las seis
   de la tarde.
+- **Las contraseñas, entre comillas dobles.** En un `.env`, un `#` sin comillas
+  **empieza un comentario**: `DB_PASSWORD=@#XVk1` llega a Laravel como `@`. El síntoma
+  es `Access denied for user ... (using password: YES)`, que hace pensar en una
+  contraseña equivocada cuando en realidad está bien y solo llegó cortada. Se comprueba
+  sin exponerla:
+
+  ```bash
+  php artisan tinker --execute 'echo strlen(config("database.connections.mysql.password")), PHP_EOL;'
+  ```
+
+  Si el largo no coincide con el de la contraseña real, es esto. La regla vale para
+  cualquier valor con `#`, espacios o comillas; si además lleva `$`, usa comillas
+  **simples**, porque entre dobles se interpola `${...}`.
 - **El bloque `DB_` completo, sin comentar.** Si falta `DB_CONNECTION` —o si quedó
   comentada mientras se probaba otra cosa— **Laravel no falla: cae en silencio a
   SQLite**, crea `database/database.sqlite` y sirve el sitio contra una base vacía. El
