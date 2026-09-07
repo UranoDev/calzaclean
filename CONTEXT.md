@@ -162,19 +162,25 @@ el eslogan juegan a favor.
   queda y CALZ-19, que la iba a retirar, quedó en `wontfix`. **El costo depende de la
   zona**: Centro sin costo, Fuera del centro +$50, y **no hay mínimo de pares** — se
   recoge aunque sea uno solo. Lo construye CALZ-20.
-
 - **Zona horaria: `America/Mexico_City`.** El taller está en un solo lugar y las fechas
   las lee la Dueña, no un sistema. Con la zona en UTC, el Panel mostraba el día
   siguiente a partir de las seis de la tarde.
 - **El seeder no crea cuentas.** Las Cuentas del Panel se crean con
   `calzaclean:crear-cuenta`. Sembrar una con correo y contraseña conocidos deja una
   puerta abierta en cuanto alguien corre `db:seed` en el servidor.
+- **Hosting: Plesk con MySQL.** Confirmado el 6 de septiembre de 2026.
+- **Correo del negocio: `eli@calzaclean.com`.** Confirmado el 6 de septiembre de 2026.
+  Es el remitente de todo lo que mande el sitio.
+- **No hay paquetes.** Los tres pares con descuento y el plan mensual quedaron
+  propuestos y sin definir. El Sitio **no los menciona**, ni siquiera como «próximamente»:
+  se agregan cuando existan, con su precio.
 
 ## Lo que sigue abierto
 
 Si una tarea depende de algo de esta lista, marca el issue `ready-for-human` y
 explícalo en el comentario en vez de inventar el dato.
 
-- **Paquetes**: tres pares con descuento y plan mensual están propuestos, sin precio.
-- **Correo del negocio** para notificaciones y para el alta de la Dueña.
-- **Hosting.** Se asume Plesk con MySQL, como los otros proyectos, sin confirmar.
+- **Credenciales SMTP del buzón `eli@calzaclean.com`**: host, puerto, usuario y
+  contraseña, que salen del panel de Plesk. La dirección ya está decidida, pero sin
+  esas credenciales el sitio no puede mandar un solo correo, y la recuperación de
+  contraseña sigue apagada. Lo enciende CALZ-21.
