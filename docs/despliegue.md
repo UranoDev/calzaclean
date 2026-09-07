@@ -113,31 +113,22 @@ lo cual se resuelve dejando un `deploy.sh` en el servidor:
 #!/usr/bin/env bash
 set -e
 cd ~/httpdocs
-
-# Las rutas de PHP y Composer cambian entre instalaciones de Plesk, así que se
-# resuelven en vez de escribirse a mano. Si hay varias versiones de PHP, gana la mayor.
-PHP=$(ls -d /opt/plesk/php/8.*/bin/php 2>/dev/null | sort -V | tail -1)
-PHP=${PHP:-$(command -v php)}
-COMPOSER=$(command -v composer || echo "$HOME/bin/composer")
-
 git pull
-"$PHP" "$COMPOSER" install --no-dev --optimize-autoloader
+composer install --no-dev --optimize-autoloader
 npm ci && npm run build
-"$PHP" artisan migrate --force
-"$PHP" artisan config:cache
-"$PHP" artisan route:cache
-"$PHP" artisan view:cache
-echo "Listo con PHP $("$PHP" -r 'echo PHP_VERSION;')"
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+echo "Listo con PHP $(php -r 'echo PHP_VERSION;')"
 ```
 
 Dos cosas del script:
 
 - **`set -e`.** Si `migrate` falla, se detiene ahí en vez de seguir cacheando
   configuración sobre una base a medio migrar.
-- **Nada de rutas escritas a mano.** `/opt/plesk/php/8.3/bin/php` y la ubicación de
-  Composer cambian entre servidores y entre versiones de Plesk; resolverlas en el script
-  evita que el despliegue se rompa el día que Plesk se actualice. La última línea imprime
-  qué PHP se usó, para verlo sin adivinar.
+- **La última línea imprime la versión de PHP** con la que corrió. Vale la pena mirarla
+  la primera vez: tiene que coincidir con la que se eligió para el dominio en el paso 1.
 
 ### 3.2 Modo de despliegue: manual
 
@@ -153,24 +144,27 @@ código nuevo quedaría corriendo contra un esquema viejo durante los segundos q
 En la misma pantalla, Plesk deja definir comandos que corren después de traer los
 archivos. Ahí va todo lo que de otro modo habría que teclear a mano:
 
-Lo más simple es que llamen al mismo `deploy.sh` de la sección anterior, que ya resuelve
-las rutas solo:
+Lo más simple es que llamen al mismo `deploy.sh` de la sección anterior:
 
 ```bash
 bash ~/deploy.sh
 ```
 
-Si prefieres escribirlas sueltas, resuelve las rutas primero — **no las escribas a
-mano**, cambian entre servidores y entre versiones de Plesk:
+O escritas sueltas:
 
 ```bash
-command -v php; ls -d /opt/plesk/php/8.*/bin/php
-command -v composer
+composer install --no-dev --optimize-autoloader
+npm ci
+npm run build
+php artisan migrate --force
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 ```
 
-El `php` que encuentra la shell suele ser la versión del sistema, casi siempre más vieja
-que la del dominio; usar esa haría que `composer install` resuelva dependencias para la
-versión equivocada, con un error que no menciona la versión de PHP por ningún lado.
+**Comprueba una vez que `php -v` sea la versión del dominio** y no la del sistema, que
+suele ser más vieja. Si no coincide, `composer install` resuelve dependencias para la
+versión equivocada y el error resultante no menciona PHP por ningún lado.
 
 #### Si Composer no aparece
 
@@ -180,10 +174,10 @@ Plesk:
 
 ```bash
 cd ~
-/opt/plesk/php/8.3/bin/php -r "copy('https://getcomposer.org/installer','composer-setup.php');"
-/opt/plesk/php/8.3/bin/php -r "if (hash_file('sha384','composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'instalador verificado'.PHP_EOL; } else { unlink('composer-setup.php'); exit('ALTO: no coincide con la firma'.PHP_EOL); }"
+php -r "copy('https://getcomposer.org/installer','composer-setup.php');"
+php -r "if (hash_file('sha384','composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'instalador verificado'.PHP_EOL; } else { unlink('composer-setup.php'); exit('ALTO: no coincide con la firma'.PHP_EOL); }"
 mkdir -p ~/bin
-/opt/plesk/php/8.3/bin/php composer-setup.php --install-dir=$HOME/bin --filename=composer
+php composer-setup.php --install-dir=$HOME/bin --filename=composer
 rm composer-setup.php
 ```
 
