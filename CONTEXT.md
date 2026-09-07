@@ -46,15 +46,13 @@ pieza de contenido que la Dueña sube cada semana y la sección que más vende.
 promoción). Se enciende y se apaga desde el Panel. **Si no tiene texto, no se
 muestra**: nunca hay una franja vacía.
 
-**Negocio** — los datos únicos del taller: WhatsApp, horarios, dirección, colonias de
-recolección y **redes**. Es un **singleton**, un solo renglón, no una tabla con muchos.
+**Negocio** — los datos únicos del taller: WhatsApp, horarios, dirección y **redes**.
+Es un **singleton**, un solo renglón, no una tabla con muchos.
 
 **Redes** — Instagram, Facebook, X y TikTok. Son cuatro campos del Negocio, cada uno
 con la URL completa. **Una red sin URL no se dibuja**: el pie del Sitio solo muestra
 las que están cargadas, nunca un icono muerto. Hoy hay Instagram y Facebook; X y
 TikTok todavía no existen y así se quedan hasta que la Dueña los cargue.
-
-**Colonia de recolección** — zona donde se recoge y se entrega a domicilio.
 
 **Pregunta** — una entrada de la sección de preguntas frecuentes: pregunta y
 respuesta, en texto plano.
@@ -80,8 +78,7 @@ una tarea.
 
 **Panel** — la parte privada, en `/panel`. Cuatro entradas: **Trabajos**, **Precios**,
 **Ajustes** y **Preguntas y testimonios**. Ajustes se abre en tres pantallas:
-**Contacto** (WhatsApp y Redes), **Negocio** (horarios, dirección, colonias de
-recolección) y **Aviso**.
+**Contacto** (WhatsApp y Redes), **Negocio** (horarios y dirección) y **Aviso**.
 
 **Sitio** — la parte pública. Una sola página con anclas, más `/precios` y
 `/cuidado-de-tenis` como páginas propias.
@@ -125,9 +122,9 @@ de texto sin ayuda.
 
 Proporción 60 / 30 / 10: blanco, azul profundo, azul claro.
 
-**La trampa que se pisa sola:** `#74AFDB` no alcanza contraste sobre fondo claro. No
-se usa para texto corrido ni para el texto de un botón, nunca. El texto lleva azul
-profundo.
+**La trampa que se pisa sola:** `#6FAFDE` da 2.4:1 contra blanco, muy por debajo del
+mínimo. No se usa para texto corrido ni para el texto de un botón, nunca, y en iconos
+solo cuando son decorativos. El texto lleva azul profundo.
 
 El eslogan del logo, **«Revive tus tenis, revive tu juego»**, es firma de marca: va
 en el pie. La línea comercial del encabezado es **«Cada material, su técnica.»**
@@ -148,14 +145,27 @@ el eslogan juegan a favor.
 
 ---
 
+## Decisiones cerradas
+
+- **Dominio: `calzaclean.com`.** Confirmado el 6 de septiembre de 2026. Es el
+  canónico del Sitio y el que va en los datos estructurados y el sitemap.
+- **No hay recolección a domicilio.** El Cliente lleva y recoge su par en el taller.
+  No es un «todavía no»: el servicio no existe, así que **el Sitio no lo menciona y el
+  Panel no tiene dónde configurarlo**. La entidad Colonia de recolección se retira en
+  CALZ-19. Si algún día se ofrece, es una decisión nueva.
+
+- **Zona horaria: `America/Mexico_City`.** El taller está en un solo lugar y las fechas
+  las lee la Dueña, no un sistema. Con la zona en UTC, el Panel mostraba el día
+  siguiente a partir de las seis de la tarde.
+- **El seeder no crea cuentas.** Las Cuentas del Panel se crean con
+  `calzaclean:crear-cuenta`. Sembrar una con correo y contraseña conocidos deja una
+  puerta abierta en cuanto alguien corre `db:seed` en el servidor.
+
 ## Lo que sigue abierto
 
 Si una tarea depende de algo de esta lista, marca el issue `ready-for-human` y
 explícalo en el comentario en vez de inventar el dato.
 
-- **Dominio definitivo.** Todavía no se compra ninguno.
-- **Recolección a domicilio**: si se ofrece, con qué costo por zona y qué mínimo de
-  pares.
 - **Paquetes**: tres pares con descuento y plan mensual están propuestos, sin precio.
 - **Correo del negocio** para notificaciones y para el alta de la Dueña.
 - **Hosting.** Se asume Plesk con MySQL, como los otros proyectos, sin confirmar.

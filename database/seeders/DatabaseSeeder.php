@@ -2,24 +2,21 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * El seeder solo carga contenido. Las Cuentas del Panel se crean con
+ * `calzaclean:crear-cuenta`: sembrar una cuenta con correo y contraseña
+ * conocidos deja una puerta abierta en cuanto alguien corre `db:seed` en
+ * el servidor.
+ */
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $this->call(ContenidoSeeder::class);
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
     }
 }

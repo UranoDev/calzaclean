@@ -154,8 +154,8 @@ return [
     | Features
     |--------------------------------------------------------------------------
     |
-    | El Panel tiene una sola usuaria, la Dueña, y su cuenta se crea con el
-    | comando `php artisan calzaclean:crear-duena`. Por eso no está el registro
+    | Las cuentas del Panel se crean con el comando
+    | `php artisan calzaclean:crear-cuenta`. Por eso no está el registro
     | público. La recuperación por correo tampoco: el correo del negocio sigue
     | sin definirse (ver CONTEXT.md § Lo que sigue abierto).
     |
