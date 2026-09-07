@@ -55,30 +55,31 @@ class ContactoTest extends TestCase
         $respuesta->assertDontSee('Horarios');
     }
 
-    public function test_el_mapa_no_se_carga_con_la_pagina(): void
+    public function test_la_pagina_no_le_pide_nada_a_google(): void
     {
         Negocio::factory()->create(['direccion' => 'Av. Juárez 12, San Juan del Río, Qro.']);
 
         $respuesta = $this->get(route('home'));
 
-        // El marco de Google entra recién cuando alguien pide el mapa: la
-        // dirección de la que sale queda guardada en el atributo.
+        // No queda marco incrustado ni el JavaScript que lo cargaba: el único
+        // camino hacia Google es el enlace, y lo abre quien lo presiona.
         $respuesta->assertDontSee('<iframe', false);
-        $respuesta->assertSee('data-mapa-src="https://www.google.com/maps?q=', false);
+        $respuesta->assertDontSee('data-mapa', false);
+        $respuesta->assertDontSee('Ver el mapa');
 
-        // Sin JavaScript queda el enlace, que abre el mapa en otra pestaña.
+        $respuesta->assertSee('Av. Juárez 12, San Juan del Río, Qro.');
         $respuesta->assertSee('https://www.google.com/maps/search/?api=1&amp;query=', false);
         $respuesta->assertSee('Abrir en Google Maps');
     }
 
-    public function test_sin_direccion_no_hay_mapa(): void
+    public function test_sin_direccion_no_hay_panel_de_direccion(): void
     {
         Negocio::factory()->create(['direccion' => null]);
 
         $respuesta = $this->get(route('home'));
 
         $respuesta->assertSee('Contacto');
+        $respuesta->assertDontSee('Dirección');
         $respuesta->assertDontSee('Abrir en Google Maps');
-        $respuesta->assertDontSee('data-mapa-src', false);
     }
 }

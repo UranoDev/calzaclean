@@ -14,7 +14,17 @@ documento es solo el procedimiento.
   la que procesa las fotos de los Trabajos. Sin GD, subir un par falla.
 - **MySQL** 8 o MariaDB 10.6+.
 - **Composer** en el servidor.
-- **Node 20+**, o la alternativa de la sección *Compilar los assets*.
+- **Node 22**, la versión que fija `.node-version` en la raíz del repo. Si el servidor
+  usa **nodenv** —Plesk suele hacerlo—, `npm` responde `command not found` mientras no
+  haya una versión elegida para la carpeta. Se arregla una sola vez:
+
+  ```bash
+  cd ~/httpdocs && nodenv local 22
+  ```
+
+  Elegir la 22 y no la 25: la 22 es LTS y es la misma línea que se usa en desarrollo.
+  Si no hay Node en el servidor, está la alternativa de la sección *Compilar los
+  assets*.
 - El DNS de `calzaclean.com` ya apunta a `74.208.127.180`. **Confirma que esa es la IP
   del servidor de Plesk donde va a vivir el sitio** antes de seguir: si el hosting
   está en otro lado, primero se corrige el registro A.
@@ -104,7 +114,7 @@ lo cual se resuelve dejando un `deploy.sh` en el servidor:
 set -e
 cd ~/httpdocs
 git pull
-/opt/plesk/php/8.3/bin/php /usr/lib/plesk-9.0/composer.phar install --no-dev --optimize-autoloader
+/opt/plesk/php/8.3/bin/php ~/bin/composer install --no-dev --optimize-autoloader
 npm ci && npm run build
 /opt/plesk/php/8.3/bin/php artisan migrate --force
 /opt/plesk/php/8.3/bin/php artisan config:cache
@@ -131,7 +141,7 @@ En la misma pantalla, Plesk deja definir comandos que corren después de traer l
 archivos. Ahí va todo lo que de otro modo habría que teclear a mano:
 
 ```bash
-/opt/plesk/php/8.3/bin/php /usr/lib/plesk-9.0/composer.phar install --no-dev --optimize-autoloader
+/opt/plesk/php/8.3/bin/php ~/bin/composer install --no-dev --optimize-autoloader
 npm ci
 npm run build
 /opt/plesk/php/8.3/bin/php artisan migrate --force
@@ -142,9 +152,33 @@ npm run build
 
 **La ruta completa de PHP no es un capricho.** El `php` que encuentra la shell suele ser
 la versión del sistema, casi siempre más vieja que la del dominio, y `composer install`
-resolvería dependencias para la versión equivocada. Ajusta `8.3` a la versión que
-elegiste en el paso 1, y confirma la ruta de `composer.phar` con `find /usr/lib/plesk-9.0
--name composer.phar` si Plesk la tiene en otro lado.
+resolvería dependencias para la versión equivocada. Ajusta `8.3` a la versión elegida en
+el paso 1.
+
+#### Dónde está Composer
+
+**No hay una ruta fija.** Depende de la versión de Plesk y de si la extensión *PHP
+Composer* está instalada. Búscalo antes de escribir las acciones:
+
+```bash
+which composer
+find /usr/lib/plesk-9.0 /usr/local/psa /opt/plesk -maxdepth 4 -name "composer*" 2>/dev/null | head
+```
+
+Si no aparece, conviene **instalarlo para el usuario** y dejar de depender de Plesk:
+
+```bash
+cd ~
+/opt/plesk/php/8.3/bin/php -r "copy('https://getcomposer.org/installer','composer-setup.php');"
+/opt/plesk/php/8.3/bin/php -r "if (hash_file('sha384','composer-setup.php') === trim(file_get_contents('https://composer.github.io/installer.sig'))) { echo 'instalador verificado'.PHP_EOL; } else { unlink('composer-setup.php'); exit('ALTO: no coincide con la firma'.PHP_EOL); }"
+mkdir -p ~/bin
+/opt/plesk/php/8.3/bin/php composer-setup.php --install-dir=$HOME/bin --filename=composer
+rm composer-setup.php
+```
+
+La segunda línea **no se salta**: compara el instalador contra la firma oficial antes de
+ejecutarlo. Se está por correr un archivo descargado con los permisos del usuario del
+hosting; si no coincide, se borra solo.
 
 Estas acciones corren en **cada** despliegue. Lo que no va aquí: `db:seed`,
 `storage:link` y la creación de cuentas, que son de la primera vez y están en los pasos

@@ -43,7 +43,10 @@ class BusquedaLocalTest extends TestCase
         $this->assertSame('+524271803585', $ficha['telephone']);
         $this->assertSame(['Mo-Fr 10:00-19:00', 'Sa 10:00-14:00'], $ficha['openingHours']);
         $this->assertSame('$100 - $200', $ficha['priceRange']);
-        $this->assertSame([['@type' => 'Place', 'name' => 'Centro']], $ficha['areaServed']);
+        $this->assertSame(
+            ['@type' => 'City', 'name' => 'San Juan del Río', 'addressRegion' => 'Querétaro'],
+            $ficha['areaServed'],
+        );
         $this->assertSame(['https://www.instagram.com/calza_clean_/'], $ficha['sameAs']);
     }
 
@@ -56,9 +59,20 @@ class BusquedaLocalTest extends TestCase
         }
     }
 
-    public function test_sin_zonas_activas_no_se_declara_area_de_recoleccion(): void
+    public function test_el_area_declarada_es_la_ciudad_y_no_las_zonas_de_recoleccion(): void
     {
-        ZonaRecoleccion::factory()->inactiva()->create(['nombre' => 'Centro']);
+        Negocio::factory()->create(['direccion' => 'Av. Juárez 12, San Juan del Río, Qro.']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Fuera del Centro de SJR', 'costo' => 50]);
+
+        $ficha = $this->fichaDelNegocio($this->get(route('home'))->getContent());
+
+        $this->assertSame('City', $ficha['areaServed']['@type']);
+        $this->assertStringNotContainsString('Fuera del Centro', json_encode($ficha['areaServed']));
+    }
+
+    public function test_sin_direccion_cargada_no_se_declara_area(): void
+    {
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro', 'costo' => 0]);
 
         $this->assertArrayNotHasKey('areaServed', $this->fichaDelNegocio($this->get(route('home'))->getContent()));
     }

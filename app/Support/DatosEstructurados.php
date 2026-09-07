@@ -4,15 +4,13 @@ namespace App\Support;
 
 use App\Models\Negocio;
 use App\Models\Servicio;
-use App\Models\ZonaRecoleccion;
 
 /**
  * La ficha del taller que leen los buscadores: el mismo Negocio que ve quien
  * entra al Sitio, escrito en el vocabulario de schema.org.
  *
  * Todo campo sale de lo que hay cargado. El que no tiene dato no se emite: una
- * dirección vacía o una lista de zonas sin ninguna activa dejan fuera su campo
- * en vez de publicar un valor de relleno.
+ * dirección vacía deja fuera su campo en vez de publicar un valor de relleno.
  */
 final class DatosEstructurados
 {
@@ -54,7 +52,7 @@ final class DatosEstructurados
             'openingHours' => Horarios::interpretar($negocio->horarios),
             'priceRange' => self::rangoDePrecios(),
             'currenciesAccepted' => self::MONEDA,
-            'areaServed' => self::zonasQueSeAtienden(),
+            'areaServed' => self::ciudadQueSeAtiende($negocio),
             'sameAs' => self::redes($negocio),
         ], fn (mixed $valor): bool => $valor !== null && $valor !== []);
     }
@@ -122,20 +120,23 @@ final class DatosEstructurados
     }
 
     /**
-     * Las zonas de recolección activas. El taller va a domicilio, pero sin
-     * ninguna zona cargada no hay área que declarar.
+     * La ciudad donde trabaja el taller. Las zonas de recolección no van acá:
+     * son categorías de cobro del Sitio, no lugares que un buscador reconozca.
+     * Sin dirección cargada no hay ciudad que declarar.
      *
-     * @return list<array<string, string>>
+     * @return array<string, string>|null
      */
-    private static function zonasQueSeAtienden(): array
+    private static function ciudadQueSeAtiende(Negocio $negocio): ?array
     {
-        $lugares = [];
-
-        foreach (ZonaRecoleccion::query()->activas()->ordenadas()->get() as $zona) {
-            $lugares[] = ['@type' => 'Place', 'name' => $zona->nombre];
+        if (blank($negocio->direccion)) {
+            return null;
         }
 
-        return $lugares;
+        return [
+            '@type' => 'City',
+            'name' => self::LOCALIDAD,
+            'addressRegion' => self::ESTADO,
+        ];
     }
 
     /**
