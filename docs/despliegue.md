@@ -208,6 +208,7 @@ nombre del archivo. Con git no pasa.
 
 ```bash
 APP_NAME=CalzaClean
+APP_KEY=
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://calzaclean.com
@@ -240,6 +241,15 @@ Después:
 
 ```bash
 php artisan key:generate
+```
+
+**`APP_KEY=` tiene que estar en el archivo, aunque vacía.** El comando no crea la
+variable: la rellena. Si falta, responde *«Unable to set application key. No APP_KEY
+variable was found in the .env file»*, que suena a un problema de permisos y no lo es.
+Se arregla insertando la línea:
+
+```bash
+sed -i '/^APP_ENV=/i APP_KEY=' .env && php artisan key:generate
 ```
 
 ## 5. Compilar los assets
