@@ -47,16 +47,19 @@ promoción). Se enciende y se apaga desde el Panel. **Si no tiene texto, no se
 muestra**: nunca hay una franja vacía.
 
 **Negocio** — los datos únicos del taller: WhatsApp, horarios, dirección, colonias de
-recolección y **redes**. Es un **singleton**, un solo renglón, no una tabla con muchos.
+zonas de recolección y **redes**. Es un **singleton**, un solo renglón, no una tabla
+con muchos.
 
 **Redes** — Instagram, Facebook, X y TikTok. Son cuatro campos del Negocio, cada uno
 con la URL completa. **Una red sin URL no se dibuja**: el pie del Sitio solo muestra
 las que están cargadas, nunca un icono muerto. Hoy hay Instagram y Facebook; X y
 TikTok todavía no existen y así se quedan hasta que la Dueña los cargue.
 
-**Colonia de recolección** — zona donde se recoge y se entrega a domicilio. La
-recolección **sí se ofrece**, pero el Sitio solo la muestra cuando hay al menos una
-colonia activa: sin zonas cargadas no hay bloque.
+**Zona de recolección** — un área donde se recoge y se entrega a domicilio, con su
+costo. Hoy hay dos: **Centro**, sin costo, y **Fuera del centro**, **+$50**. Una zona
+sin costo se escribe «sin costo», nunca «$0». El Sitio solo muestra el bloque cuando
+hay al menos una zona activa. La entidad se llamaba Colonia de recolección hasta
+CALZ-20, que le agrega el costo y la renombra.
 
 **Pregunta** — una entrada de la sección de preguntas frecuentes: pregunta y
 respuesta, en texto plano.
@@ -82,7 +85,7 @@ una tarea.
 
 **Panel** — la parte privada, en `/panel`. Cuatro entradas: **Trabajos**, **Precios**,
 **Ajustes** y **Preguntas y testimonios**. Ajustes se abre en tres pantallas:
-**Contacto** (WhatsApp y Redes), **Negocio** (horarios, dirección y colonias de
+**Contacto** (WhatsApp y Redes), **Negocio** (horarios, dirección y zonas de
 recolección) y **Aviso**.
 
 **Sitio** — la parte pública. Una sola página con anclas, más `/precios` y
@@ -156,8 +159,9 @@ el eslogan juegan a favor.
   canónico del Sitio y el que va en los datos estructurados y el sitemap.
 - **Sí hay recolección a domicilio.** Confirmado el 6 de septiembre de 2026, después
   de haberse dicho lo contrario ese mismo día: la entidad Colonia de recolección se
-  queda y CALZ-19, que la iba a retirar, quedó en `wontfix`. Lo que falta decidir
-  —costo por zona y mínimo de pares— está abajo.
+  queda y CALZ-19, que la iba a retirar, quedó en `wontfix`. **El costo depende de la
+  zona**: Centro sin costo, Fuera del centro +$50, y **no hay mínimo de pares** — se
+  recoge aunque sea uno solo. Lo construye CALZ-20.
 
 - **Zona horaria: `America/Mexico_City`.** El taller está en un solo lugar y las fechas
   las lee la Dueña, no un sistema. Con la zona en UTC, el Panel mostraba el día
@@ -171,9 +175,6 @@ el eslogan juegan a favor.
 Si una tarea depende de algo de esta lista, marca el issue `ready-for-human` y
 explícalo en el comentario en vez de inventar el dato.
 
-- **Recolección a domicilio**: existe, pero falta el **costo por zona** y el **mínimo
-  de pares**. Mientras no estén, el Sitio lista las colonias y manda a WhatsApp a
-  preguntar; no inventa ninguno de los dos.
 - **Paquetes**: tres pares con descuento y plan mensual están propuestos, sin precio.
 - **Correo del negocio** para notificaciones y para el alta de la Dueña.
 - **Hosting.** Se asume Plesk con MySQL, como los otros proyectos, sin confirmar.
