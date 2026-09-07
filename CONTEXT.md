@@ -46,9 +46,9 @@ pieza de contenido que la Dueña sube cada semana y la sección que más vende.
 promoción). Se enciende y se apaga desde el Panel. **Si no tiene texto, no se
 muestra**: nunca hay una franja vacía.
 
-**Negocio** — los datos únicos del taller: WhatsApp, horarios, dirección, colonias de
-zonas de recolección y **redes**. Es un **singleton**, un solo renglón, no una tabla
-con muchos.
+**Negocio** — los datos únicos del taller: WhatsApp, horarios, dirección, zonas de
+recolección y **redes**. Es un **singleton**, un solo renglón, no una tabla con
+muchos.
 
 **Redes** — Instagram, Facebook, X y TikTok. Son cuatro campos del Negocio, cada uno
 con la URL completa. **Una red sin URL no se dibuja**: el pie del Sitio solo muestra
@@ -57,9 +57,11 @@ TikTok todavía no existen y así se quedan hasta que la Dueña los cargue.
 
 **Zona de recolección** — un área donde se recoge y se entrega a domicilio, con su
 costo. Hoy hay dos: **Centro**, sin costo, y **Fuera del centro**, **+$50**. Una zona
-sin costo se escribe «sin costo», nunca «$0». El Sitio solo muestra el bloque cuando
-hay al menos una zona activa. La entidad se llamaba Colonia de recolección hasta
-CALZ-20, que le agrega el costo y la renombra.
+sin costo se escribe «sin costo», nunca «$0». El costo se suma al precio de la
+limpieza, así que se escribe con el mismo signo de más que un Extra. **No hay mínimo
+de pares.** El Sitio solo muestra el bloque cuando hay al menos una zona activa. La
+entidad se llamó Colonia de recolección hasta CALZ-20, que le agregó el costo y la
+renombró.
 
 **Pregunta** — una entrada de la sección de preguntas frecuentes: pregunta y
 respuesta, en texto plano.
@@ -158,10 +160,10 @@ el eslogan juegan a favor.
 - **Dominio: `calzaclean.com`.** Confirmado el 6 de septiembre de 2026. Es el
   canónico del Sitio y el que va en los datos estructurados y el sitemap.
 - **Sí hay recolección a domicilio.** Confirmado el 6 de septiembre de 2026, después
-  de haberse dicho lo contrario ese mismo día: la entidad Colonia de recolección se
-  queda y CALZ-19, que la iba a retirar, quedó en `wontfix`. **El costo depende de la
-  zona**: Centro sin costo, Fuera del centro +$50, y **no hay mínimo de pares** — se
-  recoge aunque sea uno solo. Lo construye CALZ-20.
+  de haberse dicho lo contrario ese mismo día: la entidad se queda y CALZ-19, que la
+  iba a retirar, quedó en `wontfix`. **El costo depende de la zona**: Centro sin
+  costo, Fuera del centro +$50, y **no hay mínimo de pares** — se recoge aunque sea
+  uno solo. Lo construyó CALZ-20, que renombró la entidad a Zona de recolección.
 - **Zona horaria: `America/Mexico_City`.** El taller está en un solo lugar y las fechas
   las lee la Dueña, no un sistema. Con la zona en UTC, el Panel mostraba el día
   siguiente a partir de las seis de la tarde.
@@ -171,6 +173,10 @@ el eslogan juegan a favor.
 - **Hosting: Plesk con MySQL.** Confirmado el 6 de septiembre de 2026.
 - **Correo del negocio: `eli@calzaclean.com`.** Confirmado el 6 de septiembre de 2026.
   Es el remitente de todo lo que mande el sitio.
+- **Correo saliente encendido.** Las credenciales SMTP del buzón
+  `eli@calzaclean.com` se cargaron el 6 de septiembre de 2026 y viven solo en `.env`.
+  Con eso la recuperación de contraseña del Panel quedó prendida (CALZ-21). El envío
+  se comprueba con `php artisan calzaclean:probar-correo <destino>`.
 - **No hay paquetes.** Los tres pares con descuento y el plan mensual quedaron
   propuestos y sin definir. El Sitio **no los menciona**, ni siquiera como «próximamente»:
   se agregan cuando existan, con su precio.
@@ -180,7 +186,4 @@ el eslogan juegan a favor.
 Si una tarea depende de algo de esta lista, marca el issue `ready-for-human` y
 explícalo en el comentario en vez de inventar el dato.
 
-- **Credenciales SMTP del buzón `eli@calzaclean.com`**: host, puerto, usuario y
-  contraseña, que salen del panel de Plesk. La dirección ya está decidida, pero sin
-  esas credenciales el sitio no puede mandar un solo correo, y la recuperación de
-  contraseña sigue apagada. Lo enciende CALZ-21.
+Hoy no hay ningún dato pendiente.

@@ -41,7 +41,7 @@
                 </p>
 
                 <div class="mt-8 flex flex-wrap items-center gap-3">
-                    <x-boton-whatsapp mensaje="Hola, quiero cotizar la limpieza de mis tenis.">Cotizar por WhatsApp</x-boton-whatsapp>
+                    <x-boton-whatsapp origen="portada">Cotizar por WhatsApp</x-boton-whatsapp>
                     <x-boton href="#servicios" variante="secundario">Ver precios</x-boton>
                 </div>
             </div>

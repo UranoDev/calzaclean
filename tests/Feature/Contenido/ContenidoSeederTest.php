@@ -4,6 +4,7 @@ namespace Tests\Feature\Contenido;
 
 use App\Models\Negocio;
 use App\Models\Servicio;
+use App\Models\ZonaRecoleccion;
 use Database\Seeders\ContenidoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -53,12 +54,24 @@ class ContenidoSeederTest extends TestCase
         );
     }
 
+    public function test_siembra_las_dos_zonas_de_recoleccion_con_su_costo(): void
+    {
+        $this->seed(ContenidoSeeder::class);
+
+        $zonas = ZonaRecoleccion::query()->ordenadas()->get();
+
+        $this->assertSame(['Centro SJR', 'Fuera del Centro de SJR'], $zonas->pluck('nombre')->all());
+        $this->assertSame([0, 50], $zonas->pluck('costo')->all());
+        $this->assertSame(['sin costo', '+$50'], $zonas->map->costo_formateado->all());
+    }
+
     public function test_correrlo_dos_veces_no_duplica_renglones(): void
     {
         $this->seed(ContenidoSeeder::class);
         $this->seed(ContenidoSeeder::class);
 
         $this->assertSame(8, Servicio::query()->count());
+        $this->assertSame(2, ZonaRecoleccion::query()->count());
         $this->assertSame(1, Negocio::query()->count());
     }
 

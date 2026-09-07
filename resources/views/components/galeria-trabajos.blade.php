@@ -44,6 +44,12 @@
 
                         <div class="border-t border-azul-claro-borde p-4">
                             <x-comparador-trabajo :trabajo="$trabajo" />
+
+                            {{-- La salida del par que se está mirando: el
+                                 mensaje que se precarga menciona su Material. --}}
+                            <div class="mt-4">
+                                <x-boton-whatsapp :sobre="$trabajo">Cotizar mis tenis</x-boton-whatsapp>
+                            </div>
                         </div>
                     </details>
                 </li>

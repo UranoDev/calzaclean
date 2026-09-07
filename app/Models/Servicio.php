@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Precio;
 use Database\Factories\ServicioFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -54,12 +55,12 @@ class Servicio extends Model
     }
 
     /**
-     * Único lugar donde se decide que un Extra lleva el signo de más por
-     * delante y un Servicio no.
+     * Un Extra lleva el signo de más por delante y un Servicio no. La regla de
+     * escritura vive en `Precio`, que comparte con la Zona de recolección.
      */
     private function formatearPrecio(): string
     {
-        return ($this->es_extra ? '+' : '').'$'.number_format($this->precio);
+        return Precio::formatear($this->precio, $this->es_extra);
     }
 
     /**

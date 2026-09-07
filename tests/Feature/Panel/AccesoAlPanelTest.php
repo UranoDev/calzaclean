@@ -51,12 +51,9 @@ class AccesoAlPanelTest extends TestCase
     {
         $this->assertFalse(Route::has('register'));
         $this->assertFalse(Route::has('register.store'));
-        $this->assertFalse(Route::has('password.request'));
-        $this->assertFalse(Route::has('password.reset'));
 
         $this->get('/register')->assertNotFound();
         $this->post('/register')->assertNotFound();
-        $this->get('/forgot-password')->assertNotFound();
     }
 
     public function test_entrar_lleva_al_panel(): void

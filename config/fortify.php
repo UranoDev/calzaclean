@@ -156,13 +156,14 @@ return [
     |
     | Las cuentas del Panel se crean con el comando
     | `php artisan calzaclean:crear-cuenta`. Por eso no está el registro
-    | público. La recuperación por correo tampoco: el correo del negocio sigue
-    | sin definirse (ver CONTEXT.md § Lo que sigue abierto).
+    | público. La recuperación por correo sí está: el Panel tiene dos cuentas y
+    | sin ella la única salida a una contraseña olvidada es entrar al servidor.
     |
     */
 
     'features' => [
         Features::emailVerification(),
+        Features::resetPasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,

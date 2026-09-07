@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Panel;
 
-use App\Models\ColoniaRecoleccion;
 use App\Models\Negocio;
 use App\Models\User;
+use App\Models\ZonaRecoleccion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -135,62 +135,111 @@ class AjustesDelPanelTest extends TestCase
         $this->assertSame('San Juan del Río, Qro.', $negocio->direccion);
     }
 
-    public function test_dar_de_alta_una_colonia_y_ordenarla(): void
+    public function test_dar_de_alta_una_zona_y_ordenarla(): void
     {
         Livewire::test('panel.ajustes.negocio')
-            ->call('agregarColonia')
-            ->set('colonias.0.nombre', 'Centro')
-            ->call('agregarColonia')
-            ->set('colonias.1.nombre', 'La Valla')
+            ->call('agregarZona')
+            ->set('zonas.0.nombre', 'Centro')
+            ->call('agregarZona')
+            ->set('zonas.1.nombre', 'La Valla')
             ->call('mover', 'nueva-2', -1)
             ->call('guardar')
             ->assertHasNoErrors();
 
-        $colonias = ColoniaRecoleccion::query()->ordenadas()->pluck('nombre')->all();
+        $zonas = ZonaRecoleccion::query()->ordenadas()->pluck('nombre')->all();
 
-        $this->assertSame(['La Valla', 'Centro'], $colonias);
+        $this->assertSame(['La Valla', 'Centro'], $zonas);
     }
 
-    public function test_una_colonia_sin_nombre_no_se_guarda(): void
+    public function test_una_zona_sin_nombre_no_se_guarda(): void
     {
         Livewire::test('panel.ajustes.negocio')
-            ->call('agregarColonia')
+            ->call('agregarZona')
             ->call('guardar')
-            ->assertHasErrors(['colonias.0.nombre' => 'required'])
-            ->assertSee('Escribe el nombre de la colonia.');
+            ->assertHasErrors(['zonas.0.nombre' => 'required'])
+            ->assertSee('Escribe el nombre de la zona.');
 
-        $this->assertSame(0, ColoniaRecoleccion::query()->count());
+        $this->assertSame(0, ZonaRecoleccion::query()->count());
     }
 
-    public function test_sin_ninguna_colonia_activa_la_pantalla_dice_que_falta_para_que_aparezca(): void
+    public function test_sin_ninguna_zona_activa_la_pantalla_dice_que_falta_para_que_aparezca(): void
     {
-        ColoniaRecoleccion::factory()->inactiva()->create(['nombre' => 'Centro']);
+        ZonaRecoleccion::factory()->inactiva()->create(['nombre' => 'Centro']);
 
         Livewire::test('panel.ajustes.negocio')
-            ->assertSee('Mientras no haya ninguna colonia activa, el sitio no menciona la recolección a domicilio.');
+            ->assertSee('Mientras no haya ninguna zona activa, el sitio no menciona la recolección a domicilio.');
 
         $this->get(route('home'))->assertDontSee('recolección', false);
     }
 
-    public function test_con_una_colonia_activa_la_pantalla_la_lista(): void
+    public function test_con_una_zona_activa_la_pantalla_la_lista(): void
     {
-        ColoniaRecoleccion::factory()->create(['nombre' => 'Centro']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro']);
 
         Livewire::test('panel.ajustes.negocio')
             ->assertSee('Centro')
-            ->assertDontSee('Mientras no haya ninguna colonia activa');
+            ->assertDontSee('Mientras no haya ninguna zona activa');
     }
 
-    public function test_borrar_una_colonia_la_saca_de_la_lista(): void
+    public function test_guardar_el_costo_de_una_zona(): void
     {
-        $colonia = ColoniaRecoleccion::factory()->create(['nombre' => 'Centro']);
+        Livewire::test('panel.ajustes.negocio')
+            ->call('agregarZona')
+            ->set('zonas.0.nombre', 'Fuera del centro')
+            ->set('zonas.0.costo', '50')
+            ->call('guardar')
+            ->assertHasNoErrors();
+
+        $zona = ZonaRecoleccion::query()->firstOrFail();
+
+        $this->assertSame(50, $zona->costo);
+        $this->assertSame('+$50', $zona->costo_formateado);
+    }
+
+    public function test_una_zona_nueva_arranca_sin_costo(): void
+    {
+        Livewire::test('panel.ajustes.negocio')
+            ->call('agregarZona')
+            ->set('zonas.0.nombre', 'Centro')
+            ->call('guardar')
+            ->assertHasNoErrors();
+
+        $this->assertSame(0, ZonaRecoleccion::query()->firstOrFail()->costo);
+    }
+
+    public function test_un_costo_que_no_es_un_numero_no_se_guarda(): void
+    {
+        Livewire::test('panel.ajustes.negocio')
+            ->call('agregarZona')
+            ->set('zonas.0.nombre', 'Centro')
+            ->set('zonas.0.costo', 'gratis')
+            ->call('guardar')
+            ->assertHasErrors(['zonas.0.costo' => 'integer'])
+            ->assertSee('El costo va en pesos enteros, sin centavos.');
+
+        $this->assertSame(0, ZonaRecoleccion::query()->count());
+    }
+
+    public function test_la_vista_previa_escribe_el_costo_como_lo_escribe_el_sitio(): void
+    {
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro', 'orden' => 1]);
+        ZonaRecoleccion::factory()->conCosto(50)->create(['nombre' => 'Fuera del centro', 'orden' => 2]);
 
         Livewire::test('panel.ajustes.negocio')
-            ->call('confirmarBorrado', 'colonia-'.$colonia->id)
-            ->assertSee('¿Borrar «Centro» de la lista?')
-            ->call('borrar', 'colonia-'.$colonia->id);
+            ->assertSee('Centro — sin costo')
+            ->assertSee('Fuera del centro — +$50');
+    }
 
-        $this->assertSame(0, ColoniaRecoleccion::query()->count());
+    public function test_borrar_una_zona_la_saca_de_la_lista(): void
+    {
+        $zona = ZonaRecoleccion::factory()->create(['nombre' => 'Centro']);
+
+        Livewire::test('panel.ajustes.negocio')
+            ->call('confirmarBorrado', 'zona-'.$zona->id)
+            ->assertSee('¿Borrar «Centro» de la lista?')
+            ->call('borrar', 'zona-'.$zona->id);
+
+        $this->assertSame(0, ZonaRecoleccion::query()->count());
     }
 
     public function test_un_aviso_encendido_sin_texto_no_dibuja_la_franja(): void

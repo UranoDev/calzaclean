@@ -3,10 +3,10 @@
 namespace Tests\Feature\Contenido;
 
 use App\Enums\Material;
-use App\Models\ColoniaRecoleccion;
 use App\Models\Pregunta;
 use App\Models\Testimonio;
 use App\Models\Trabajo;
+use App\Models\ZonaRecoleccion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -48,12 +48,12 @@ class ContenidoTest extends TestCase
         $this->assertSame(['¿Cuánto tardan?'], Pregunta::query()->publicadas()->pluck('pregunta')->all());
     }
 
-    public function test_las_colonias_inactivas_quedan_fuera(): void
+    public function test_las_zonas_inactivas_quedan_fuera(): void
     {
-        ColoniaRecoleccion::factory()->create(['nombre' => 'Centro']);
-        ColoniaRecoleccion::factory()->inactiva()->create(['nombre' => 'La Valla']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro']);
+        ZonaRecoleccion::factory()->inactiva()->create(['nombre' => 'La Valla']);
 
-        $this->assertSame(['Centro'], ColoniaRecoleccion::query()->activas()->pluck('nombre')->all());
+        $this->assertSame(['Centro'], ZonaRecoleccion::query()->activas()->pluck('nombre')->all());
     }
 
     public function test_solo_un_trabajo_publicado_le_pone_foto_al_testimonio(): void

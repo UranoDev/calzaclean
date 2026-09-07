@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\ColoniaRecoleccion;
+use App\Models\ZonaRecoleccion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<ColoniaRecoleccion>
+ * @extends Factory<ZonaRecoleccion>
  */
-class ColoniaRecoleccionFactory extends Factory
+class ZonaRecoleccionFactory extends Factory
 {
     /**
      * @return array<string, mixed>
@@ -16,10 +16,18 @@ class ColoniaRecoleccionFactory extends Factory
     public function definition(): array
     {
         return [
-            'nombre' => 'Colonia '.fake()->unique()->word(),
+            'nombre' => 'Zona '.fake()->unique()->word(),
+            'costo' => 0,
             'orden' => 0,
             'activa' => true,
         ];
+    }
+
+    public function conCosto(int $costo = 50): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'costo' => $costo,
+        ]);
     }
 
     public function inactiva(): static

@@ -1,8 +1,8 @@
 @php
-    // Las colonias salen del Panel, en Ajustes › Negocio. Sin ninguna activa no
+    // Las zonas salen del Panel, en Ajustes › Negocio. Sin ninguna activa no
     // hay bloque de recolección y el paso de dejar el par habla solo del
     // taller: el Sitio no ofrece un servicio para el que nadie cargó zonas.
-    $colonias = \App\Models\ColoniaRecoleccion::query()->activas()->ordenadas()->get();
+    $zonas = \App\Models\ZonaRecoleccion::query()->activas()->ordenadas()->get();
 
     $pasos = [
         [
@@ -11,8 +11,8 @@
         ],
         [
             'titulo' => 'Dejas el par',
-            'detalle' => $colonias->isNotEmpty()
-                ? 'Lo traes al taller, en San Juan del Río, o pasamos por él si tu colonia está en la lista de abajo.'
+            'detalle' => $zonas->isNotEmpty()
+                ? 'Lo traes al taller, en San Juan del Río, o pasamos por él si tu zona está en la lista de abajo.'
                 : 'Lo traes al taller, en San Juan del Río.',
         ],
         [
@@ -45,28 +45,34 @@
         @endforeach
     </ol>
 
-    @if ($colonias->isNotEmpty())
+    @if ($zonas->isNotEmpty())
         <div class="mt-8 rounded-tarjeta border border-azul-claro-borde bg-azul-claro-tenue p-6">
             <h3 class="font-titulo text-subtitulo font-bold text-azul-profundo">Recolección a domicilio</h3>
 
             <p class="mt-2 max-w-prose text-cuerpo text-azul-profundo">
-                Pasamos por tu par y te lo regresamos en estas colonias:
+                Pasamos por tu par y te lo regresamos. Recogemos desde un solo par.
             </p>
 
+            {{-- Nombre y costo van en el mismo renglón de texto: la zona sin
+                 costo se lee «Centro — sin costo», nunca «Centro — $0». --}}
             <ul role="list" class="mt-4 flex flex-wrap gap-2">
-                @foreach ($colonias as $colonia)
-                    <li class="rounded-pieza border border-azul-claro-borde bg-white px-3 py-1.5 font-titulo text-menu font-semibold text-azul-profundo">
-                        {{ $colonia->nombre }}
+                @foreach ($zonas as $zona)
+                    <li class="rounded-pieza border border-azul-claro-borde bg-white px-3 py-1.5 font-titulo text-menu font-semibold tabular-nums text-azul-profundo">
+                        {{ $zona->nombre }} — {{ $zona->costo_formateado }}
                     </li>
                 @endforeach
             </ul>
+
+            <p class="mt-3 max-w-prose text-menu text-azul-profundo">
+                El costo de la zona se suma al precio de la limpieza.
+            </p>
 
             <div class="mt-6 flex flex-wrap items-center gap-4">
                 <p class="max-w-prose text-cuerpo text-azul-profundo">
                     Escríbenos y te decimos cómo queda la recolección para tu dirección.
                 </p>
 
-                <x-boton-whatsapp mensaje="Hola, quiero saber si pasan a recoger mis tenis en mi colonia.">
+                <x-boton-whatsapp origen="recoleccion">
                     Preguntar por la recolección
                 </x-boton-whatsapp>
             </div>

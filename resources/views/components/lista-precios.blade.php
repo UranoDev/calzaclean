@@ -68,7 +68,7 @@
                 ¿No sabes cuál te toca? Mándanos una foto y te decimos.
             </p>
 
-            <x-boton-whatsapp mensaje="Hola, les mando una foto de mis tenis para saber qué servicio me toca.">
+            <x-boton-whatsapp origen="foto">
                 Mandar una foto
             </x-boton-whatsapp>
         </div>

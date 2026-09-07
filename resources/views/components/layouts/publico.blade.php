@@ -3,6 +3,7 @@
     'descripcion' => null,
     'vistaPrevia' => null,
     'minimo' => false,
+    'origenWhatsapp' => 'contacto',
 ])
 
 @php
@@ -90,8 +91,8 @@
             </nav>
 
             <div class="flex items-center gap-2">
-                <x-boton-whatsapp compacto class="lg:hidden" mensaje="Hola, quiero información sobre la limpieza de mis tenis." />
-                <x-boton-whatsapp class="hidden lg:inline-flex" mensaje="Hola, quiero información sobre la limpieza de mis tenis." />
+                <x-boton-whatsapp compacto class="lg:hidden" />
+                <x-boton-whatsapp class="hidden lg:inline-flex" />
 
                 <details class="relative lg:hidden" data-menu>
                     <summary class="flex size-11 cursor-pointer list-none items-center justify-center rounded-pieza border border-azul-claro-borde bg-white text-azul-profundo [&::-webkit-details-marker]:hidden" aria-label="Abrir el menú de secciones">
@@ -124,7 +125,7 @@
     </main>
 
     @unless ($minimo)
-    <footer class="mt-seccion bg-azul-calzaclean text-white">
+    <footer data-sin-flotante class="mt-seccion bg-azul-calzaclean text-white">
         <x-contenedor class="flex flex-col gap-8 py-seccion md:flex-row md:items-start md:justify-between">
             <div class="max-w-md">
                 <x-logo-calzaclean :enlace="false" alto="h-9" />
@@ -145,13 +146,15 @@
                     </ul>
                 @endif
 
-                <x-boton-whatsapp mensaje="Hola, quiero información sobre la limpieza de mis tenis." />
+                <x-boton-whatsapp />
 
                 <p class="text-menu text-white/70">© {{ now()->year }} CalzaClean</p>
             </div>
         </x-contenedor>
     </footer>
     @endunless
+
+    <x-whatsapp-flotante :origen="$origenWhatsapp" />
 
     @unless ($minimo)
     <script>

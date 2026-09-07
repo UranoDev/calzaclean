@@ -3,7 +3,7 @@
 ### Contexto del dominio
 
 `CONTEXT.md` es el glosario: **Servicio**, **Extra**, **Material**, **Trabajo**,
-**Aviso**, **Negocio**, **Colonia de recolección**, **Pregunta**, **Testimonio**,
+**Aviso**, **Negocio**, **Zona de recolección**, **Pregunta**, **Testimonio**,
 **Cliente**, **Dueña**, **Panel** y **Sitio**. Se lee antes de tocar código — ahí
 están las cinco trampas del dominio y la sección **Lo que sigue abierto**, que es lo
 que no se inventa.

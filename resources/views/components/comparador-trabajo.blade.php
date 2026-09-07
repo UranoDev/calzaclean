@@ -5,7 +5,7 @@
     script del final de la galería marca el bloque con `data-activo` y ahí las
     apila: la de antes queda encima, recortada hasta donde llegó la manija.
 --}}
-<div class="comparador" data-comparador {{ $attributes }}>
+<div class="comparador" data-comparador data-sin-flotante {{ $attributes }}>
     <div class="comparador__lienzo">
         <figure class="comparador__foto comparador__foto--antes">
             <div class="comparador__caja">

@@ -37,6 +37,12 @@
                 viewable
             />
 
+            @if (Route::has('password.request'))
+                <div class="-mt-3 text-sm">
+                    <flux:link :href="route('password.request')">Olvidé mi contraseña</flux:link>
+                </div>
+            @endif
+
             <!-- Remember Me -->
             <flux:checkbox name="remember" label="Recordarme en este dispositivo" :checked="old('remember')" />
 

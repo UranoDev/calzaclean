@@ -21,6 +21,12 @@
 
                     <div class="border-t border-azul-claro-borde px-5 py-4">
                         <p class="max-w-prose whitespace-pre-line text-cuerpo text-gris-pizarra">{{ $pregunta->respuesta }}</p>
+
+                        {{-- Cuando la respuesta no alcanza: el mensaje llega a
+                             la conversación con esta pregunta ya escrita. --}}
+                        <p class="mt-4">
+                            <x-boton-whatsapp :sobre="$pregunta" variante="enlace">Preguntar esto por WhatsApp</x-boton-whatsapp>
+                        </p>
                     </div>
                 </details>
             </li>

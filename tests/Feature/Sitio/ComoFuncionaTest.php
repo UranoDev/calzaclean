@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Sitio;
 
-use App\Models\ColoniaRecoleccion;
 use App\Models\Negocio;
+use App\Models\ZonaRecoleccion;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -53,9 +53,9 @@ class ComoFuncionaTest extends TestCase
             ->assertSee('La entrega es en 72 horas. Con la entrega express, +$100, sale en menos de 24.', false);
     }
 
-    public function test_sin_colonias_activas_no_hay_bloque_de_recoleccion(): void
+    public function test_sin_zonas_activas_no_hay_bloque_de_recoleccion(): void
     {
-        ColoniaRecoleccion::factory()->inactiva()->create(['nombre' => 'Centro']);
+        ZonaRecoleccion::factory()->inactiva()->create(['nombre' => 'Centro']);
 
         $response = $this->get(route('home'));
 
@@ -64,19 +64,19 @@ class ComoFuncionaTest extends TestCase
         $response->assertSee('Lo traes al taller, en San Juan del Río.', false);
     }
 
-    public function test_con_colonias_activas_aparece_la_lista_y_el_paso_la_menciona(): void
+    public function test_con_zonas_activas_aparece_la_lista_y_el_paso_la_menciona(): void
     {
         Negocio::factory()->create(['whatsapp' => '52 442 123 4567']);
-        ColoniaRecoleccion::factory()->create(['nombre' => 'La Peña', 'orden' => 2]);
-        ColoniaRecoleccion::factory()->create(['nombre' => 'Centro', 'orden' => 1]);
-        ColoniaRecoleccion::factory()->inactiva()->create(['nombre' => 'Vista Hermosa']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'La Peña', 'orden' => 2]);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro', 'orden' => 1]);
+        ZonaRecoleccion::factory()->inactiva()->create(['nombre' => 'Vista Hermosa']);
 
         $response = $this->get(route('home'));
 
         $response->assertSee('Recolección a domicilio', false);
         $response->assertSee('La Peña', false);
         $response->assertDontSee('Vista Hermosa', false);
-        $response->assertSee('pasamos por él si tu colonia está en la lista de abajo', false);
+        $response->assertSee('pasamos por él si tu zona está en la lista de abajo', false);
 
         $html = $response->getContent();
         $this->assertLessThan(strpos($html, 'La Peña'), strpos($html, 'Centro'));
@@ -85,25 +85,37 @@ class ComoFuncionaTest extends TestCase
     public function test_la_recoleccion_manda_a_preguntar_por_whatsapp(): void
     {
         Negocio::factory()->create(['whatsapp' => '52 442 123 4567']);
-        ColoniaRecoleccion::factory()->create(['nombre' => 'Centro']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro']);
 
         $this->get(route('home'))
-            ->assertSee(rawurlencode('Hola, quiero saber si pasan a recoger mis tenis en mi colonia.'), false);
+            ->assertSee(rawurlencode('Hola, quiero saber si pasan a recoger mis tenis en mi zona.'), false);
     }
 
-    public function test_la_recoleccion_no_promete_costo_ni_minimo_de_pares(): void
+    public function test_cada_zona_se_lista_con_su_costo(): void
     {
         Negocio::factory()->create(['whatsapp' => '52 442 123 4567']);
-        ColoniaRecoleccion::factory()->create(['nombre' => 'Centro']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro', 'orden' => 1]);
+        ZonaRecoleccion::factory()->conCosto(50)->create(['nombre' => 'Fuera del centro', 'orden' => 2]);
 
-        $html = $this->get(route('home'))->getContent();
-        $bloque = substr($html, (int) strpos($html, 'Recolección a domicilio'));
-        $bloque = substr($bloque, 0, (int) strpos($bloque, 'id="materiales"'));
+        $this->get(route('home'))
+            ->assertSee('Centro — sin costo', false)
+            ->assertSee('Fuera del centro — +$50', false);
+    }
 
-        // El costo por zona y el mínimo de pares siguen sin decidirse
-        // (CONTEXT.md § Lo que sigue abierto): el bloque no los inventa.
-        $this->assertStringNotContainsString('$', $bloque);
-        $this->assertStringNotContainsString('mínimo', $bloque);
-        $this->assertStringNotContainsString('pares', $bloque);
+    public function test_una_zona_sin_costo_no_se_escribe_con_cero(): void
+    {
+        Negocio::factory()->create(['whatsapp' => '52 442 123 4567']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro']);
+
+        // Un cero en una lista de precios se lee como error.
+        $this->get(route('home'))->assertDontSee('Centro — $0', false);
+    }
+
+    public function test_la_recoleccion_dice_que_se_recoge_desde_un_solo_par(): void
+    {
+        Negocio::factory()->create(['whatsapp' => '52 442 123 4567']);
+        ZonaRecoleccion::factory()->create(['nombre' => 'Centro']);
+
+        $this->get(route('home'))->assertSee('Recogemos desde un solo par', false);
     }
 }

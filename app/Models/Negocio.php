@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\EnlaceWhatsApp;
 use Database\Factories\NegocioFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -48,29 +49,12 @@ class Negocio extends Model
     ];
 
     /**
-     * Deja el WhatsApp en puros dígitos, con lada de país y sin el 1 que
-     * México pedía para celulares: es la forma que acepta `wa.me`.
+     * Deja el WhatsApp en la forma que acepta `wa.me`. La regla vive en
+     * `EnlaceWhatsApp`, junto con el armado del enlace.
      */
     public static function normalizarWhatsapp(?string $valor): ?string
     {
-        $digitos = (string) preg_replace('/\D/', '', (string) $valor);
-
-        // Prefijo internacional escrito como 00 en vez de +.
-        if (str_starts_with($digitos, '00')) {
-            $digitos = substr($digitos, 2);
-        }
-
-        // El 1 de México va después del 52 y wa.me no lo usa.
-        if (strlen($digitos) === 13 && str_starts_with($digitos, '521')) {
-            $digitos = '52'.substr($digitos, 3);
-        }
-
-        // Diez dígitos son un número local: le falta la lada de país.
-        if (strlen($digitos) === 10) {
-            $digitos = '52'.$digitos;
-        }
-
-        return $digitos === '' ? null : $digitos;
+        return EnlaceWhatsApp::normalizarNumero($valor);
     }
 
     /**
@@ -83,8 +67,7 @@ class Negocio extends Model
 
     /**
      * El WhatsApp se guarda ya normalizado, venga de donde venga: del Panel,
-     * del seeder o de una prueba. La vista previa del Panel se apoya en esto
-     * para enseñar el enlace antes de guardar.
+     * del seeder o de una prueba.
      */
     protected function setWhatsappAttribute(?string $valor): void
     {
@@ -92,19 +75,13 @@ class Negocio extends Model
     }
 
     /**
-     * El enlace de WhatsApp con el mensaje precargado. Es el único lugar donde
-     * se arma: el Sitio y la vista previa del Panel piden los dos aquí. Sin
-     * número cargado no hay conversación a dónde mandar a nadie y devuelve
-     * `null`.
+     * El enlace de WhatsApp de este Negocio, con el mensaje que se le pase. La
+     * dirección la arma `EnlaceWhatsApp` y nadie más: la vista previa del Panel
+     * entra por aquí con el número que todavía no se guarda.
      */
     public function enlaceWhatsapp(?string $mensaje = null): ?string
     {
-        if (blank($this->whatsapp)) {
-            return null;
-        }
-
-        return 'https://wa.me/'.$this->whatsapp
-            .(filled($mensaje) ? '?text='.rawurlencode($mensaje) : '');
+        return EnlaceWhatsApp::con($this->whatsapp, $mensaje);
     }
 
     /**

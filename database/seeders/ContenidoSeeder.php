@@ -4,11 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Negocio;
 use App\Models\Servicio;
+use App\Models\ZonaRecoleccion;
 use Illuminate\Database\Seeder;
 
 /**
- * Deja cargado el contenido que no se inventa: la lista de precios del taller y
- * los datos del Negocio. Se puede correr las veces que haga falta.
+ * Deja cargado el contenido que no se inventa: la lista de precios del taller,
+ * las zonas de recolección y los datos del Negocio. Se puede correr las veces
+ * que haga falta.
  */
 class ContenidoSeeder extends Seeder
 {
@@ -26,6 +28,17 @@ class ContenidoSeeder extends Seeder
         ['nombre' => 'Mochilas', 'aplica_a' => null, 'precio' => 200, 'es_extra' => false],
         ['nombre' => 'Blanqueamiento de suelas', 'aplica_a' => null, 'precio' => 50, 'es_extra' => true],
         ['nombre' => 'Entrega express', 'aplica_a' => null, 'precio' => 100, 'es_extra' => true],
+    ];
+
+    /**
+     * Las zonas donde se recoge a domicilio, con su costo en pesos. Un `0` es
+     * una zona sin costo.
+     *
+     * @var list<array<string, mixed>>
+     */
+    private const ZONAS = [
+        ['nombre' => 'Centro SJR', 'costo' => 0],
+        ['nombre' => 'Fuera del Centro de SJR', 'costo' => 50],
     ];
 
     /**
@@ -48,6 +61,17 @@ class ContenidoSeeder extends Seeder
                     'es_extra' => $servicio['es_extra'],
                     'orden' => $orden + 1,
                     'activo' => true,
+                ],
+            );
+        }
+
+        foreach (self::ZONAS as $orden => $zona) {
+            ZonaRecoleccion::query()->updateOrCreate(
+                ['nombre' => $zona['nombre']],
+                [
+                    'costo' => $zona['costo'],
+                    'orden' => $orden + 1,
+                    'activa' => true,
                 ],
             );
         }

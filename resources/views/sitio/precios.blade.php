@@ -4,6 +4,7 @@
     titulo="Precios"
     descripcion="Precios de limpieza y restauración de tenis a mano en San Juan del Río, Querétaro. Cada material lleva su técnica."
     vista-previa="/img/precios-vista-previa.png"
+    origen-whatsapp="precios"
     minimo
 >
     <x-contenedor class="py-seccion">

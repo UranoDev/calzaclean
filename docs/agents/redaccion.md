@@ -23,9 +23,9 @@ comparaciones con lo que se descartó y las moralejas.
 Una pantalla no describe en presente algo que depende de una configuración que quizá
 nadie hizo.
 
-Mal: «Recogemos tus tenis en tu casa» —cuando no hay ninguna colonia de recolección
+Mal: «Recogemos tus tenis en tu casa» —cuando no hay ninguna zona de recolección
 cargada.
-Bien: la sección de recolección no se muestra si no hay colonias, y el Panel dice qué
+Bien: la sección de recolección no se muestra si no hay zonas, y el Panel dice qué
 falta para que aparezca.
 
 Lo mismo con el **Aviso**: sin texto no hay franja. El sitio se ve bien sin ninguno,

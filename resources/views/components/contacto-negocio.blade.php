@@ -54,7 +54,7 @@
         @endif
 
         <div class="mt-8">
-            <x-boton-whatsapp mensaje="Hola, quiero información sobre la limpieza de mis tenis." />
+            <x-boton-whatsapp />
         </div>
     </div>
 
