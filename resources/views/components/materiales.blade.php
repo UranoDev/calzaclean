@@ -50,7 +50,8 @@
         @endforeach
     </ul>
 
-    <div class="mt-8">
+    <div class="mt-8 flex flex-wrap gap-3">
         <x-boton href="#servicios" variante="secundario">Ver los precios por servicio</x-boton>
+        <x-boton :href="route('cuidado-de-tenis')" variante="secundario">Cómo cuidarlos en casa</x-boton>
     </div>
 </div>

@@ -82,7 +82,7 @@ class ContenidoSeederTest extends TestCase
         $negocio = Negocio::actual();
 
         $this->assertSame('524271803585', $negocio->whatsapp);
-        $this->assertSame('San Juan del Río, Qro.', $negocio->direccion);
+        $this->assertSame('Antonio Caso #3, San Juan del Río, Qro. 76800', $negocio->direccion);
         $this->assertSame('https://www.instagram.com/calza_clean_/', $negocio->instagram);
         $this->assertSame('https://www.facebook.com/people/Calzaclean/61584140572641/', $negocio->facebook);
 

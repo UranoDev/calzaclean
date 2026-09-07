@@ -47,7 +47,7 @@ class ContenidoSeeder extends Seeder
      * @var array<string, string>
      */
     private const NEGOCIO = [
-        'direccion' => 'San Juan del Río, Qro.',
+        'direccion' => 'Antonio Caso #3, San Juan del Río, Qro. 76800',
     ];
 
     public function run(): void

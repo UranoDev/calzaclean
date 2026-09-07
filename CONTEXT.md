@@ -124,7 +124,7 @@ recolección) y **Aviso**.
 | Azul claro | `#6FAFDE` | **El azul claro del logo, medido.** Solo relleno, borde, icono y fondo de sección |
 | Blanco humo | `#F7F9FB` | Superficie |
 | Gris pizarra | `#5A6B79` | Texto secundario |
-| Verde acción | `#2E9E76` | **Exclusivo del botón de WhatsApp** |
+| Verde acción | `#24805F` | **Exclusivo del botón de WhatsApp** |
 
 Los dos azules **no son aproximaciones**: salen de muestrear `public/img/logo-original.jpeg`
 el 6 de septiembre de 2026. `#214966` da 9.5:1 contra blanco, así que sirve como color
@@ -135,6 +135,13 @@ Proporción 60 / 30 / 10: blanco, azul profundo, azul claro.
 **La trampa que se pisa sola:** `#6FAFDE` da 2.4:1 contra blanco, muy por debajo del
 mínimo. No se usa para texto corrido ni para el texto de un botón, nunca, y en iconos
 solo cuando son decorativos. El texto lleva azul profundo.
+
+El verde era `#2E9E76` hasta CALZ-17. Con blanco encima daba 3.35:1 y el texto del
+botón de WhatsApp no llegaba al mínimo, justo en el botón del que cuelga todo el
+sitio. `#24805F` es el mismo verde un paso más oscuro —la mezcla en oklab que ya usaba
+el estado de hover— y da 4.85:1. El anillo de foco sale de ese mismo verde, que sobre
+blanco alcanza los 3:1 que pide un indicador; sobre el azul del pie no, así que ahí el
+botón lleva `foco="claro"` y el anillo se dibuja blanco.
 
 El eslogan del logo, **«Revive tus tenis, revive tu juego»**, es firma de marca: va
 en el pie. La línea comercial del encabezado es **«Cada material, su técnica.»**
@@ -150,15 +157,29 @@ pastilla blanca, así que se lee tanto sobre blanco como sobre el azul del pie.
 **No hay vectorial.** Mientras no aparezca el original en `.ai`, `.svg` o `.eps`, el
 logotipo es un mapa de bits y no conviene usarlo a más de 360 px de ancho. Si llega el
 vectorial, se reemplaza el PNG y el componente no cambia. El lockup completo sí sirve
-tal cual para la imagen de vista previa al compartir (CALZ-16), donde el fondo azul y
-el eslogan juegan a favor.
+tal cual para la imagen de vista previa al compartir, donde el fondo azul y el eslogan
+juegan a favor.
+
+**Los iconos y la vista previa se generan del logo, no se dibujan.** Dos scripts que se
+corren a mano cuando cambia el logo, y cuyo resultado se comitea:
+
+- `php scripts/generar-iconos.php` recorta la **C** de «Calza» del logotipo y la pone
+  sobre el azul del logo. De ahí salen `public/favicon.ico` (16, 32 y 48 px),
+  `public/favicon.svg` y `public/apple-touch-icon.png`. A 32 px el logotipo completo no
+  se lee; una letra sí.
+- `php scripts/generar-vista-previa.php` recorta el lockup a `public/img/vista-previa.png`,
+  de 1200 × 630, que es lo que se ve al pegar el enlace del Sitio en una conversación.
+  `/precios` tiene la suya, de `scripts/generar-vista-previa-precios.php`.
 
 ---
 
 ## Decisiones cerradas
 
 - **Dominio: `calzaclean.com`.** Confirmado el 6 de septiembre de 2026. Es el
-  canónico del Sitio y el que va en los datos estructurados y el sitemap.
+  canónico del Sitio y el que va en los datos estructurados y el sitemap. Vive en
+  `APP_URL` y en ningún otro lado: `App\Support\EnlaceCanonico` es el único que arma
+  direcciones absolutas, y `robots.txt` y `sitemap.xml` se sirven desde una ruta —no
+  desde `public/`— para que salgan de ahí.
 - **Sí hay recolección a domicilio.** Confirmado el 6 de septiembre de 2026, después
   de haberse dicho lo contrario ese mismo día: la entidad se queda y CALZ-19, que la
   iba a retirar, quedó en `wontfix`. **El costo depende de la zona**: Centro sin

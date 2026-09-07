@@ -1,9 +1,17 @@
 <?php
 
+use App\Http\Controllers\MapaDelSitioController;
+use App\Http\Controllers\RobotsController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'sitio.inicio')->name('home');
 Route::view('precios', 'sitio.precios')->name('precios');
+Route::view('cuidado-de-tenis', 'sitio.cuidado-de-tenis')->name('cuidado-de-tenis');
+
+// Los dos archivos que lee un buscador. Se sirven desde una ruta y no desde
+// `public/` para que el dominio salga de la configuración.
+Route::get('sitemap.xml', MapaDelSitioController::class)->name('mapa-del-sitio');
+Route::get('robots.txt', RobotsController::class)->name('robots');
 
 Route::middleware(['auth'])->prefix('panel')->name('panel.')->group(function () {
     Route::view('/', 'panel.inicio')->name('inicio');

@@ -39,7 +39,7 @@
                                         <a
                                             href="{{ $red['url'] }}"
                                             target="_blank"
-                                            rel="noopener"
+                                            rel="me noopener"
                                             class="inline-flex rounded-pieza border border-azul-claro-borde bg-white px-4 py-2 font-titulo text-menu font-semibold text-azul-profundo hover:bg-azul-claro-tenue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-profundo"
                                         >
                                             {{ $red['nombre'] }}

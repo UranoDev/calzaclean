@@ -21,7 +21,7 @@
     --color-azul-claro: #6fafde;
     --color-blanco-humo: #f7f9fb;
     --color-gris-pizarra: #5a6b79;
-    --color-verde-accion: #2e9e76;
+    --color-verde-accion: #24805f;
 
     /* Derivados: estados y superficies. No agregan colores nuevos. */
     --color-azul-profundo-hover: color-mix(in oklab, var(--color-azul-profundo) 86%, black);
@@ -87,15 +87,46 @@
         border-color: var(--color-gray-200, currentColor);
     }
 
-    /* El encabezado del Sitio es fijo: los saltos a un ancla dejan aire arriba. */
+    /* El encabezado del Sitio es fijo: los saltos a un ancla dejan aire arriba.
+       Lo mismo vale para el foco que llega tabulando, que también entra en
+       pantalla por este camino. */
     html {
         scroll-padding-top: calc(var(--spacing-encabezado) + 1.5rem);
     }
 
-    @media (prefers-reduced-motion: reduce) {
+    /* El salto suave se pide acá y no con la utilidad `scroll-smooth` en el
+       `html`: la capa de utilidades va después de esta, así que le ganaba al
+       bloque de abajo y el salto seguía siendo suave para quien pidió menos
+       movimiento. */
+    @media (prefers-reduced-motion: no-preference) {
         html {
-            scroll-behavior: auto;
+            scroll-behavior: smooth;
         }
+    }
+
+    /* Quien pidió menos movimiento no ve ninguna transición ni animación: ni la
+       del comparador, ni la de los botones, ni las que traiga el Panel. Va acá
+       y no componente por componente, que es como se escapa una. */
+    @media (prefers-reduced-motion: reduce) {
+
+        *,
+        ::before,
+        ::after,
+        ::backdrop {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    /* El foco de todo lo que no declara el suyo: los campos del Panel, el
+       `summary` del menú de secciones, el enlace de saltar al contenido. Es
+       azul profundo, que es el color de las superficies claras; el pie, que es
+       azul, pide el blanco enlace por enlace. */
+    :focus-visible {
+        outline: 2px solid var(--color-azul-profundo);
+        outline-offset: 2px;
     }
 }
 
@@ -260,12 +291,6 @@
     /* Mientras se arrastra, la foto sigue al dedo sin retardo. */
     .comparador[data-arrastrando] .comparador__foto--antes {
         transition: none;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .comparador .comparador__foto--antes {
-            transition: none;
-        }
     }
 }
 

@@ -29,7 +29,7 @@ ingeniería. Ver `docs/agents/triage-labels.md`.
 **Paleta A, «Taller»** — tokens en `resources/css/app.css`, tabla completa en
 `CONTEXT.md`. La regla que se rompe sola: el azul claro `#74AFDB` **no** se usa para
 texto sobre fondo claro, solo para relleno, borde, icono y fondo de sección. El verde
-`#2E9E76` es exclusivo del botón de WhatsApp y no se reparte por la interfaz.
+`#24805F` es exclusivo del botón de WhatsApp y no se reparte por la interfaz.
 
 ### Redacción de la interfaz
 

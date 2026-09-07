@@ -3,6 +3,7 @@
     'sobre' => null,
     'compacto' => false,
     'variante' => 'boton',
+    'foco' => 'marca',
 ])
 
 @php
@@ -14,6 +15,10 @@
     // clic sale de algo puntual —un Trabajo de la galería, una Pregunta que
     // quedó sin resolver— se pasa ese modelo en `sobre` y el mensaje lo
     // menciona.
+    //
+    // `foco` es de qué color se dibuja el anillo al llegar tabulando. El verde
+    // se ve sobre las superficies claras, pero no sobre el azul del pie: ahí el
+    // botón pide el blanco.
     $enlace = $sobre !== null
         ? \App\Support\EnlaceWhatsApp::sobre($sobre)
         : \App\Support\EnlaceWhatsApp::desde($origen);
@@ -27,10 +32,13 @@
         {{ $attributes->class([
             'inline-flex items-center justify-center gap-2 font-titulo font-semibold transition-colors',
             'focus-visible:outline-2 focus-visible:outline-offset-2',
-            'rounded-pieza bg-verde-accion text-white hover:bg-verde-accion-hover focus-visible:outline-verde-accion' => $variante === 'boton',
+            'rounded-pieza bg-verde-accion text-white hover:bg-verde-accion-hover' => $variante === 'boton',
             'size-11 shrink-0' => $variante === 'boton' && $compacto,
             'px-5 py-3 text-menu' => $variante === 'boton' && ! $compacto,
-            'text-menu text-azul-profundo underline-offset-4 hover:underline focus-visible:outline-azul-profundo' => $variante === 'enlace',
+            'text-menu text-azul-profundo underline-offset-4 hover:underline' => $variante === 'enlace',
+            'focus-visible:outline-white' => $foco === 'claro',
+            'focus-visible:outline-verde-accion' => $foco !== 'claro' && $variante === 'boton',
+            'focus-visible:outline-azul-profundo' => $foco !== 'claro' && $variante === 'enlace',
         ]) }}
         @if ($variante === 'boton' && $compacto) aria-label="Escribir por WhatsApp" @endif
     >

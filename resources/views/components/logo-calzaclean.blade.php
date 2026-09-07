@@ -1,4 +1,4 @@
-@props(['enlace' => true, 'alto' => 'h-8', 'href' => null])
+@props(['enlace' => true, 'alto' => 'h-8', 'href' => null, 'cargar' => 'eager'])
 
 @php
     $etiqueta = $enlace ? 'a' : 'span';
@@ -16,6 +16,8 @@
         alt="{{ $enlace ? '' : 'CalzaClean' }}"
         width="720"
         height="126"
+        loading="{{ $cargar }}"
+        decoding="async"
         class="{{ $alto }} w-auto shrink-0"
     />
 </{{ $etiqueta }}>

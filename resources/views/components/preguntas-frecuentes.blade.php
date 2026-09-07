@@ -11,7 +11,7 @@
             <li>
                 {{-- Cada respuesta llega abierta: sin JavaScript se leen todas. --}}
                 <details open class="group overflow-hidden rounded-tarjeta border border-azul-claro-borde bg-white shadow-pieza">
-                    <summary class="flex cursor-pointer list-none items-start gap-4 p-5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-profundo [&::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer list-none items-start gap-4 p-5 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-azul-profundo [&::-webkit-details-marker]:hidden">
                         <h3 class="min-w-0 flex-1 font-titulo text-subtitulo font-semibold text-azul-profundo">{{ $pregunta->pregunta }}</h3>
 
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="mt-1 size-5 shrink-0 text-azul-profundo group-open:rotate-180">

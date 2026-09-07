@@ -123,9 +123,10 @@ class GaleriaDeTrabajosTest extends TestCase
 
         $html = $this->get(route('home'))->getContent();
 
-        // Las dos de la portada y ni una más. Las nueve diferidas son la
-        // miniatura y el par de cada uno de los tres Trabajos.
-        $this->assertSame(2, substr_count($html, 'loading="eager"'));
-        $this->assertSame(9, substr_count($html, 'loading="lazy"'));
+        // De inmediato, las dos de la portada y el logotipo del encabezado, y
+        // ni una más. Las diez diferidas son la miniatura y el par de cada uno
+        // de los tres Trabajos, más el logotipo del pie.
+        $this->assertSame(3, substr_count($html, 'loading="eager"'));
+        $this->assertSame(10, substr_count($html, 'loading="lazy"'));
     }
 }

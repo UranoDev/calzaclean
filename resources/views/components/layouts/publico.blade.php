@@ -1,7 +1,7 @@
 @props([
     'titulo' => null,
     'descripcion' => null,
-    'vistaPrevia' => null,
+    'vistaPrevia' => \App\Support\DatosEstructurados::VISTA_PREVIA,
     'minimo' => false,
     'origenWhatsapp' => 'contacto',
 ])
@@ -12,6 +12,10 @@
     // sin Preguntas publicadas y con el Negocio vacío no se dibujan.
     $negocio = \App\Models\Negocio::actual();
 
+    // Fuera de la portada, un ancla suelta no lleva a ninguna parte: desde
+    // otra página el menú vuelve a la portada y ahí salta a la sección.
+    $portada = request()->routeIs('home') ? '' : route('home');
+
     $anclas = array_values(array_filter([
         ['ancla' => '#servicios', 'texto' => 'Servicios'],
         ['ancla' => '#trabajos', 'texto' => 'Antes y después'],
@@ -21,15 +25,27 @@
         ['ancla' => '#contacto', 'texto' => 'Contacto', 'se_muestra' => $negocio->contacto_visible],
     ], fn (array $enlace): bool => $enlace['se_muestra'] ?? true));
 
+    // Las dos páginas propias del Sitio, para llegar a ellas desde cualquier
+    // otra.
+    $paginas = [
+        ['href' => route('precios'), 'texto' => 'Precios'],
+        ['href' => route('cuidado-de-tenis'), 'texto' => 'Cuidado de tenis'],
+    ];
+
     // Las redes salen del Negocio: una sin URL no se dibuja, y cargarla desde
     // el Panel la hace aparecer sin tocar esta vista.
     $redes = $negocio->redes;
 
     $tituloCompleto = filled($titulo) ? $titulo.' — '.config('app.name') : config('app.name');
+
+    // El canónico y la imagen de vista previa salen del dominio configurado,
+    // no del nombre de servidor con el que llegó la visita.
+    $canonico = \App\Support\EnlaceCanonico::actual();
+    $imagenDeVistaPrevia = filled($vistaPrevia) ? \App\Support\EnlaceCanonico::a($vistaPrevia) : null;
 @endphp
 
 <!DOCTYPE html>
-<html lang="es-MX" class="scroll-smooth">
+<html lang="es-MX">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,19 +56,21 @@
         <meta name="description" content="{{ $descripcion }}" />
     @endif
 
+    <link rel="canonical" href="{{ $canonico }}" />
+
     {{-- Lo que se ve cuando alguien pega el enlace en una conversación. --}}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="{{ config('app.name') }}" />
     <meta property="og:locale" content="es_MX" />
     <meta property="og:title" content="{{ $tituloCompleto }}" />
-    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:url" content="{{ $canonico }}" />
 
     @if (filled($descripcion))
         <meta property="og:description" content="{{ $descripcion }}" />
     @endif
 
-    @if (filled($vistaPrevia))
-        <meta property="og:image" content="{{ url($vistaPrevia) }}" />
+    @if (filled($imagenDeVistaPrevia))
+        <meta property="og:image" content="{{ $imagenDeVistaPrevia }}" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
@@ -66,6 +84,8 @@
     @fonts
 
     @vite(['resources/css/app.css'])
+
+    <x-datos-estructurados />
 </head>
 <body class="min-h-screen overflow-x-clip bg-blanco-humo font-texto text-cuerpo text-azul-profundo antialiased">
 
@@ -82,7 +102,7 @@
                 <ul class="flex items-center gap-6">
                     @foreach ($anclas as $enlace)
                         <li>
-                            <a href="{{ $enlace['ancla'] }}" class="font-titulo text-menu font-semibold text-azul-profundo underline-offset-8 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-azul-profundo">
+                            <a href="{{ $portada.$enlace['ancla'] }}" class="font-titulo text-menu font-semibold text-azul-profundo underline-offset-8 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-azul-profundo">
                                 {{ $enlace['texto'] }}
                             </a>
                         </li>
@@ -105,7 +125,7 @@
                         <ul class="flex flex-col">
                             @foreach ($anclas as $enlace)
                                 <li>
-                                    <a href="{{ $enlace['ancla'] }}" class="block rounded-suave px-3 py-2.5 font-titulo text-menu font-semibold text-azul-profundo hover:bg-azul-claro-tenue">
+                                    <a href="{{ $portada.$enlace['ancla'] }}" class="block rounded-suave px-3 py-2.5 font-titulo text-menu font-semibold text-azul-profundo hover:bg-azul-claro-tenue">
                                         {{ $enlace['texto'] }}
                                     </a>
                                 </li>
@@ -128,9 +148,21 @@
     <footer data-sin-flotante class="mt-seccion bg-azul-calzaclean text-white">
         <x-contenedor class="flex flex-col gap-8 py-seccion md:flex-row md:items-start md:justify-between">
             <div class="max-w-md">
-                <x-logo-calzaclean :enlace="false" alto="h-9" />
+                <x-logo-calzaclean :enlace="false" alto="h-9" cargar="lazy" />
                 <p class="mt-4 font-titulo text-guia font-semibold text-white">Revive tus tenis, revive tu juego</p>
                 <p class="mt-2 text-menu text-white/80">Limpieza y restauración de tenis a mano en San Juan del Río, Querétaro.</p>
+
+                <nav aria-label="Páginas del sitio" class="mt-6">
+                    <ul class="flex flex-wrap gap-4">
+                        @foreach ($paginas as $pagina)
+                            <li>
+                                <a href="{{ $pagina['href'] }}" class="font-titulo text-menu font-semibold text-white underline-offset-8 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                                    {{ $pagina['texto'] }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
             </div>
 
             <div class="flex flex-col gap-4 md:items-end">
@@ -138,7 +170,7 @@
                     <ul class="flex flex-wrap gap-4">
                         @foreach ($redes as $red)
                             <li>
-                                <a href="{{ $red['url'] }}" target="_blank" rel="noopener" class="font-titulo text-menu font-semibold text-white underline-offset-8 hover:underline">
+                                <a href="{{ $red['url'] }}" target="_blank" rel="me noopener" class="font-titulo text-menu font-semibold text-white underline-offset-8 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
                                     {{ $red['nombre'] }}
                                 </a>
                             </li>
@@ -146,7 +178,7 @@
                     </ul>
                 @endif
 
-                <x-boton-whatsapp />
+                <x-boton-whatsapp foco="claro" />
 
                 <p class="text-menu text-white/70">© {{ now()->year }} CalzaClean</p>
             </div>

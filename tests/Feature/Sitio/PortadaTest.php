@@ -142,8 +142,11 @@ class PortadaTest extends TestCase
 
         $html = $this->get(route('home'))->getContent();
 
-        // El par de la portada es lo único que se descarga de inmediato.
-        $this->assertSame(2, substr_count($html, 'loading="eager"'));
+        // De inmediato entran el par de la portada y el logotipo del
+        // encabezado. Diferidos, la miniatura del Trabajo en la galería, su par
+        // dentro del comparador y el logotipo del pie.
+        $this->assertSame(3, substr_count($html, 'loading="eager"'));
+        $this->assertSame(4, substr_count($html, 'loading="lazy"'));
         $this->assertSame(2, substr_count($html, 'width="1600" height="1200"'));
     }
 
@@ -151,7 +154,8 @@ class PortadaTest extends TestCase
     {
         $html = $this->get(route('home'))->getContent();
 
-        $this->assertSame(1, substr_count($html, 'loading="eager"'));
+        // La imagen de respaldo y el logotipo del encabezado.
+        $this->assertSame(2, substr_count($html, 'loading="eager"'));
         $this->assertStringContainsString('width="1002"', $html);
         $this->assertStringContainsString('height="612"', $html);
     }

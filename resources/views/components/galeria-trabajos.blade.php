@@ -18,7 +18,7 @@
             @foreach ($trabajos as $trabajo)
                 <li>
                     <details class="group overflow-hidden rounded-tarjeta border border-azul-claro-borde bg-white shadow-pieza">
-                        <summary class="flex cursor-pointer list-none items-center gap-4 p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-azul-profundo [&::-webkit-details-marker]:hidden">
+                        <summary class="flex cursor-pointer list-none items-center gap-4 p-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-azul-profundo [&::-webkit-details-marker]:hidden">
                             <span class="block size-20 shrink-0 overflow-hidden rounded-pieza bg-azul-claro-tenue">
                                 <x-foto-trabajo
                                     :foto="$trabajo->despues()"
