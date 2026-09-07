@@ -47,7 +47,12 @@ promoción). Se enciende y se apaga desde el Panel. **Si no tiene texto, no se
 muestra**: nunca hay una franja vacía.
 
 **Negocio** — los datos únicos del taller: WhatsApp, horarios, dirección, colonias de
-recolección, redes. Es un **singleton**, un solo renglón, no una tabla con muchos.
+recolección y **redes**. Es un **singleton**, un solo renglón, no una tabla con muchos.
+
+**Redes** — Instagram, Facebook, X y TikTok. Son cuatro campos del Negocio, cada uno
+con la URL completa. **Una red sin URL no se dibuja**: el pie del Sitio solo muestra
+las que están cargadas, nunca un icono muerto. Hoy hay Instagram y Facebook; X y
+TikTok todavía no existen y así se quedan hasta que la Dueña los cargue.
 
 **Colonia de recolección** — zona donde se recoge y se entrega a domicilio.
 
@@ -57,14 +62,20 @@ respuesta, en texto plano.
 **Testimonio** — la reseña de un Cliente publicada en el sitio: nombre, texto y,
 cuando existe, el Trabajo al que corresponde.
 
+**Tiempo de entrega** — **72 horas**. Confirmado por la Dueña el 6 de septiembre de
+2026: se puede escribir como promesa en presente. La **entrega express** es el Extra
+que lo baja a menos de 24 horas por +$100.
+
 **Cliente** — quien lleva sus tenis. **No tiene cuenta.** El sitio no tiene login
 para clientes ni los guarda en base de datos.
 
 **Dueña** — la única persona con acceso al Panel. No hay registro público: su usuario
 se crea con un comando de artisan.
 
-**Panel** — la parte privada, en `/panel`. Cuatro pantallas: Trabajos, Precios,
-Negocio, y Preguntas y testimonios.
+**Panel** — la parte privada, en `/panel`. Cuatro entradas: **Trabajos**, **Precios**,
+**Ajustes** y **Preguntas y testimonios**. Ajustes se abre en tres pantallas:
+**Contacto** (WhatsApp y Redes), **Negocio** (horarios, dirección, colonias de
+recolección) y **Aviso**.
 
 **Sitio** — la parte pública. Una sola página con anclas, más `/precios` y
 `/cuidado-de-tenis` como páginas propias.
@@ -95,12 +106,16 @@ Negocio, y Preguntas y testimonios.
 
 | Token | Hex | Uso |
 | --- | --- | --- |
-| Azul profundo | `#1F4763` | Texto, estructura, encabezados |
-| Azul CalzaClean | `#24506E` | Segundo azul del logo, superficies oscuras |
-| Azul claro | `#74AFDB` | **Solo relleno, borde, icono y fondo de sección** |
+| Azul profundo | `#16334A` | Texto y encabezados. Un paso más oscuro que el del logo |
+| Azul CalzaClean | `#214966` | **El azul del logo, medido del archivo.** Superficies oscuras y pie |
+| Azul claro | `#6FAFDE` | **El azul claro del logo, medido.** Solo relleno, borde, icono y fondo de sección |
 | Blanco humo | `#F7F9FB` | Superficie |
 | Gris pizarra | `#5A6B79` | Texto secundario |
 | Verde acción | `#2E9E76` | **Exclusivo del botón de WhatsApp** |
+
+Los dos azules **no son aproximaciones**: salen de muestrear `public/img/logo-original.jpeg`
+el 6 de septiembre de 2026. `#214966` da 9.5:1 contra blanco, así que sirve como color
+de texto sin ayuda.
 
 Proporción 60 / 30 / 10: blanco, azul profundo, azul claro.
 
@@ -110,6 +125,20 @@ profundo.
 
 El eslogan del logo, **«Revive tus tenis, revive tu juego»**, es firma de marca: va
 en el pie. La línea comercial del encabezado es **«Cada material, su técnica.»**
+
+### El logo
+
+`public/img/logo-original.jpeg` es el archivo que entregó la Dueña: el lockup completo
+—logotipo, eslogan y los dos tenis— sobre el azul del logo. De ahí sale
+`public/img/logo-calzaclean.png`, el logotipo recortado con fondo transparente, que es
+el que usa `<x-logo-calzaclean>` en el encabezado y en el pie. El logotipo trae la
+pastilla blanca, así que se lee tanto sobre blanco como sobre el azul del pie.
+
+**No hay vectorial.** Mientras no aparezca el original en `.ai`, `.svg` o `.eps`, el
+logotipo es un mapa de bits y no conviene usarlo a más de 360 px de ancho. Si llega el
+vectorial, se reemplaza el PNG y el componente no cambia. El lockup completo sí sirve
+tal cual para la imagen de vista previa al compartir (CALZ-16), donde el fondo azul y
+el eslogan juegan a favor.
 
 ---
 
@@ -121,8 +150,6 @@ explícalo en el comentario en vez de inventar el dato.
 - **Dominio definitivo.** Todavía no se compra ninguno.
 - **Recolección a domicilio**: si se ofrece, con qué costo por zona y qué mínimo de
   pares.
-- **Tiempo de entrega estándar.** El sitio dice 72 horas como supuesto; falta que la
-  Dueña lo confirme antes de publicarlo como promesa.
 - **Paquetes**: tres pares con descuento y plan mensual están propuestos, sin precio.
 - **Correo del negocio** para notificaciones y para el alta de la Dueña.
 - **Hosting.** Se asume Plesk con MySQL, como los otros proyectos, sin confirmar.

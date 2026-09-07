@@ -22,6 +22,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
-
+/varios
 # Config local de YouTrack: puede contener un token permanente.
 /.ralph

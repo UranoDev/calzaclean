@@ -11,17 +11,56 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
+    /* Tipografías: una para títulos, una para texto. */
+    --font-titulo: 'Archivo', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-texto: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* --- Paleta A «Taller» (CONTEXT.md § Dirección visual) --------------- */
+    --color-azul-profundo: #16334a;
+    --color-azul-calzaclean: #214966;
+    --color-azul-claro: #6fafde;
+    --color-blanco-humo: #f7f9fb;
+    --color-gris-pizarra: #5a6b79;
+    --color-verde-accion: #2e9e76;
+
+    /* Derivados: estados y superficies. No agregan colores nuevos. */
+    --color-azul-profundo-hover: color-mix(in oklab, var(--color-azul-profundo) 86%, black);
+    --color-azul-claro-tenue: color-mix(in oklab, var(--color-azul-claro) 20%, white);
+    --color-azul-claro-borde: color-mix(in oklab, var(--color-azul-claro) 55%, white);
+    --color-verde-accion-hover: color-mix(in oklab, var(--color-verde-accion) 86%, black);
+
+    /* --- Escala tipográfica --------------------------------------------- */
+    --text-rotulo: 0.8125rem;
+    --text-rotulo--line-height: 1.2;
+    --text-rotulo--letter-spacing: 0.12em;
+    --text-menu: 0.9375rem;
+    --text-menu--line-height: 1.4;
+    --text-cuerpo: 1.0625rem;
+    --text-cuerpo--line-height: 1.65;
+    --text-guia: 1.1875rem;
+    --text-guia--line-height: 1.6;
+    --text-subtitulo: 1.375rem;
+    --text-subtitulo--line-height: 1.35;
+    --text-titulo: clamp(1.75rem, 1.25rem + 2.1vw, 2.5rem);
+    --text-titulo--line-height: 1.15;
+    --text-portada: clamp(2.125rem, 1.35rem + 3.4vw, 3.5rem);
+    --text-portada--line-height: 1.05;
+
+    /* --- Espaciados ------------------------------------------------------ */
+    --spacing-encabezado: 4rem;
+    --spacing-contenedor: 1.25rem;
+    --spacing-seccion: 4rem;
+    --spacing-seccion-amplia: 6rem;
+    --container-sitio: 72rem;
+
+    /* --- Radios ---------------------------------------------------------- */
+    --radius-suave: 0.5rem;
+    --radius-pieza: 0.875rem;
+    --radius-tarjeta: 1.25rem;
+
+    /* --- Sombras --------------------------------------------------------- */
+    --shadow-encabezado: 0 1px 0 0 color-mix(in oklab, var(--color-azul-profundo) 12%, transparent);
+    --shadow-pieza: 0 10px 30px -18px color-mix(in oklab, var(--color-azul-profundo) 55%, transparent);
 
     --color-accent: var(--color-neutral-800);
     --color-accent-content: var(--color-neutral-800);
@@ -45,6 +84,17 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    /* El encabezado del Sitio es fijo: los saltos a un ancla dejan aire arriba. */
+    html {
+        scroll-padding-top: calc(var(--spacing-encabezado) + 1.5rem);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+    }
 }
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
@@ -60,7 +110,3 @@ textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
-
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
