@@ -212,13 +212,11 @@ new class extends Component
                 <span wire:loading wire:target="guardar">Guardando…</span>
             </x-boton>
 
-            <p class="text-menu text-gris-pizarra">
-                @if ($guardado)
-                    Los datos de contacto quedaron guardados.
-                @else
-                    Los cambios se aplican al guardar.
-                @endif
-            </p>
+            <x-aviso-guardado
+                :guardado="$guardado"
+                texto="Los datos de contacto quedaron guardados."
+                reposo="Los cambios se aplican al guardar."
+            />
         </div>
     </form>
 </div>

@@ -27,9 +27,10 @@ ingeniería. Ver `docs/agents/triage-labels.md`.
 ### Dirección visual
 
 **Paleta A, «Taller»** — tokens en `resources/css/app.css`, tabla completa en
-`CONTEXT.md`. La regla que se rompe sola: el azul claro `#74AFDB` **no** se usa para
+`CONTEXT.md`. La regla que se rompe sola: el azul claro `#6FAFDE` **no** se usa para
 texto sobre fondo claro, solo para relleno, borde, icono y fondo de sección. El verde
-`#24805F` es exclusivo del botón de WhatsApp y no se reparte por la interfaz.
+`#24805F` es exclusivo del botón de WhatsApp **en el Sitio**; el Panel tiene su propio
+color semántico —éxito, alerta y error— documentado en `CONTEXT.md`.
 
 ### Redacción de la interfaz
 

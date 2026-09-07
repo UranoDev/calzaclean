@@ -429,13 +429,11 @@ new class extends Component
                 <span wire:loading wire:target="guardar">Guardando…</span>
             </x-boton>
 
-            <p class="text-menu text-gris-pizarra">
-                @if ($guardado)
-                    Los datos del negocio quedaron guardados.
-                @else
-                    Los cambios se aplican al guardar, incluido el orden.
-                @endif
-            </p>
+            <x-aviso-guardado
+                :guardado="$guardado"
+                texto="Los datos del negocio quedaron guardados."
+                reposo="Los cambios se aplican al guardar, incluido el orden."
+            />
         </div>
     </form>
 </div>

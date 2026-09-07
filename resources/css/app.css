@@ -23,11 +23,22 @@
     --color-gris-pizarra: #5a6b79;
     --color-verde-accion: #24805f;
 
+    /* --- Color semántico del Panel -------------------------------------- */
+    /* No son acentos de marca: dicen qué pasó. Van aparte de verde-accion,
+       que sigue siendo exclusivo del botón de WhatsApp en el Sitio. Los tres
+       pasan 4.5:1 sobre blanco como texto, medido con Tests\Support\Paleta. */
+    --color-exito: #1c7a55;
+    --color-alerta: #9a5314;
+    --color-error: #b3261e;
+
     /* Derivados: estados y superficies. No agregan colores nuevos. */
     --color-azul-profundo-hover: color-mix(in oklab, var(--color-azul-profundo) 86%, black);
     --color-azul-claro-tenue: color-mix(in oklab, var(--color-azul-claro) 20%, white);
     --color-azul-claro-borde: color-mix(in oklab, var(--color-azul-claro) 55%, white);
     --color-verde-accion-hover: color-mix(in oklab, var(--color-verde-accion) 86%, black);
+    --color-exito-tenue: color-mix(in oklab, var(--color-exito) 12%, white);
+    --color-alerta-tenue: color-mix(in oklab, var(--color-alerta) 12%, white);
+    --color-error-tenue: color-mix(in oklab, var(--color-error) 12%, white);
 
     /* --- Escala tipográfica --------------------------------------------- */
     --text-rotulo: 0.8125rem;

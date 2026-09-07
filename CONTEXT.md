@@ -124,7 +124,21 @@ recolección) y **Aviso**.
 | Azul claro | `#6FAFDE` | **El azul claro del logo, medido.** Solo relleno, borde, icono y fondo de sección |
 | Blanco humo | `#F7F9FB` | Superficie |
 | Gris pizarra | `#5A6B79` | Texto secundario |
-| Verde acción | `#24805F` | **Exclusivo del botón de WhatsApp** |
+| Verde acción | `#24805F` | **Exclusivo del botón de WhatsApp, en el Sitio** |
+
+### Color semántico del Panel
+
+Va aparte de la paleta de marca porque no acentúa: dice qué pasó. Los tres pasan 4.5:1
+sobre blanco como texto, medido con `Tests\Support\Paleta`.
+
+| Token | Hex | Uso |
+| --- | --- | --- |
+| Éxito | `#1C7A55` | Confirmaciones: «quedó guardado» |
+| Alerta | `#9A5314` | Advertencias que no impiden seguir |
+| Error | `#B3261E` | Validaciones y fallos |
+
+No se usan en el Sitio. Y **no se confunden con `verde-accion`**: ese sigue queriendo
+decir «WhatsApp», y si además significara «guardado» dejaría de significar nada.
 
 Los dos azules **no son aproximaciones**: salen de muestrear `public/img/logo-original.jpeg`
 el 6 de septiembre de 2026. `#214966` da 9.5:1 contra blanco, así que sirve como color

@@ -3,9 +3,16 @@
 ])
 
 @php
-    // Las cuatro entradas del Panel. En celular son la barra de abajo; en
-    // escritorio, la navegación del encabezado.
+    // Las entradas del Panel. En celular son la barra de abajo; en escritorio,
+    // la navegación del encabezado. Inicio va primero: sin ella, desde una
+    // pantalla de Ajustes no había forma de volver a la lista de accesos.
     $entradas = [
+        [
+            'ruta' => 'panel.inicio',
+            'patron' => 'panel.inicio',
+            'texto' => 'Inicio',
+            'icono' => '<path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1Z" />',
+        ],
         [
             'ruta' => 'panel.trabajos',
             'patron' => 'panel.trabajos',
