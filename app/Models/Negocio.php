@@ -24,6 +24,7 @@ use Illuminate\Support\Carbon;
  * @property string|null $aviso_texto
  * @property bool $aviso_activo
  * @property bool $aviso_visible
+ * @property bool $contacto_visible
  * @property array<string, array{nombre: string, url: string}> $redes
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -151,6 +152,21 @@ class Negocio extends Model
     protected function avisoVisible(): Attribute
     {
         return Attribute::get(fn (): bool => $this->aviso_activo && filled($this->aviso_texto));
+    }
+
+    /**
+     * Si la sección de Contacto tiene algo que mostrar. Un Negocio recién
+     * creado no trae dirección, horarios, WhatsApp ni redes: sin ninguno de
+     * los cuatro la sección no se dibuja y no queda un encabezado suelto.
+     *
+     * @return Attribute<bool, never>
+     */
+    protected function contactoVisible(): Attribute
+    {
+        return Attribute::get(fn (): bool => filled($this->direccion)
+            || filled($this->horarios)
+            || filled($this->whatsapp)
+            || $this->redes !== []);
     }
 
     /**

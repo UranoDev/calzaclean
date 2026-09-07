@@ -100,6 +100,22 @@ class Trabajo extends Model
     }
 
     /**
+     * Cómo se describe una de las fotos del par para quien no la ve: el
+     * momento, el Material y el Servicio que se le aplicó. Sin Servicio en el
+     * catálogo queda el Material, que es lo que nunca falta.
+     *
+     * @param  string  $momento  'Antes' o 'Después'
+     */
+    public function descripcionDeFoto(string $momento): string
+    {
+        $servicio = $this->servicio?->nombre;
+
+        return filled($servicio)
+            ? "{$momento}: {$this->material->etiqueta()}, {$servicio}"
+            : "{$momento}: {$this->material->etiqueta()}";
+    }
+
+    /**
      * El número de orden que le toca a un Trabajo nuevo: el último de la lista.
      */
     public static function siguienteOrden(): int
@@ -152,6 +168,18 @@ class Trabajo extends Model
     protected function ordenados(Builder $query): void
     {
         $query->orderBy('orden')->orderByDesc('id');
+    }
+
+    /**
+     * Del último que se subió al primero. La portada enseña el primero de esta
+     * lista; la rejilla usa el orden que la Dueña acomodó a mano.
+     *
+     * @param  Builder<$this>  $query
+     */
+    #[Scope]
+    protected function recientes(Builder $query): void
+    {
+        $query->orderByDesc('created_at')->orderByDesc('id');
     }
 
     /**

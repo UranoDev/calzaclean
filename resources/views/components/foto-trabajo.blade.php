@@ -2,6 +2,9 @@
     'foto',
     'alt',
     'variante' => 'miniatura',
+    'cargar' => 'lazy',
+    'ancho' => null,
+    'alto' => null,
 ])
 
 @php
@@ -12,13 +15,15 @@
         : \App\Fotos\Variante::from($variante);
 @endphp
 
-<picture>
+<picture class="block h-full w-full">
     <source srcset="{{ $foto->webp($variante) }}" type="image/webp">
     <img
         src="{{ $foto->jpeg($variante) }}"
         alt="{{ $alt }}"
-        loading="lazy"
+        loading="{{ $cargar }}"
         decoding="async"
+        @if ($cargar === 'eager') fetchpriority="high" @endif
+        @if ($ancho && $alto) width="{{ $ancho }}" height="{{ $alto }}" @endif
         {{ $attributes->class('block h-full w-full object-cover') }}
     >
 </picture>

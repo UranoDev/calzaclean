@@ -99,6 +99,176 @@
     }
 }
 
+@layer components {
+
+    /* --- Comparador de antes y después -----------------------------------
+       El HTML trae las dos fotos una junto a la otra. El script de la galería
+       marca el bloque con `data-activo` y ahí se arma el comparador: la de
+       antes queda encima, recortada hasta donde llegó la manija. */
+
+    .comparador {
+        --posicion: 50;
+        --manija-lado: 2.75rem;
+        --corte: calc(var(--manija-lado) / 2 + (100% - var(--manija-lado)) * var(--posicion) / 100);
+    }
+
+    .comparador__lienzo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .comparador__foto {
+        margin: 0;
+    }
+
+    .comparador__caja {
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: var(--radius-pieza);
+        background-color: var(--color-azul-claro-tenue);
+    }
+
+    .comparador__rotulo {
+        margin-top: 0.5rem;
+        font-family: var(--font-titulo);
+        font-size: var(--text-rotulo);
+        line-height: var(--text-rotulo--line-height);
+        letter-spacing: var(--text-rotulo--letter-spacing);
+        font-weight: 600;
+        text-align: center;
+        text-transform: uppercase;
+        color: var(--color-gris-pizarra);
+    }
+
+    /* Sin JavaScript no hay nada que deslizar, así que no se dibuja. */
+    .comparador__manija {
+        display: none;
+    }
+
+    .comparador[data-activo] {
+        position: relative;
+    }
+
+    .comparador[data-activo] .comparador__lienzo {
+        display: block;
+        position: relative;
+        container-type: inline-size;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: var(--radius-pieza);
+        background-color: var(--color-azul-claro-tenue);
+    }
+
+    .comparador[data-activo] .comparador__foto {
+        position: absolute;
+        inset: 0;
+    }
+
+    /* La caja deja de ser un marco: el recorte lo hace la figura de arriba. */
+    .comparador[data-activo] .comparador__caja {
+        display: contents;
+    }
+
+    .comparador[data-activo] .comparador__foto--antes {
+        z-index: 1;
+        width: var(--corte);
+        overflow: hidden;
+        border-right: 2px solid var(--color-white);
+        transition: width 120ms ease-out;
+    }
+
+    /* La foto de antes conserva el ancho del lienzo aunque su figura se
+       angoste: si no, se encogería en vez de recortarse. */
+    .comparador[data-activo] .comparador__foto--antes .comparador__imagen {
+        width: 100cqi;
+        max-width: none;
+    }
+
+    .comparador[data-activo] .comparador__rotulo {
+        position: absolute;
+        top: 0.5rem;
+        margin-top: 0;
+        border-radius: 9999px;
+        background-color: var(--color-white);
+        padding: 0.25rem 0.625rem;
+        color: var(--color-azul-profundo);
+    }
+
+    .comparador[data-activo] .comparador__foto--antes .comparador__rotulo {
+        left: 0.5rem;
+    }
+
+    .comparador[data-activo] .comparador__foto--despues .comparador__rotulo {
+        right: 0.5rem;
+    }
+
+    .comparador[data-activo] .comparador__manija {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        appearance: none;
+        background-color: transparent;
+        cursor: ew-resize;
+        touch-action: pan-y;
+    }
+
+    .comparador__manija:focus-visible {
+        outline: 2px solid var(--color-azul-profundo);
+        outline-offset: 3px;
+        border-radius: var(--radius-pieza);
+    }
+
+    .comparador__manija::-webkit-slider-runnable-track {
+        height: 100%;
+        background-color: transparent;
+        border: 0;
+    }
+
+    .comparador__manija::-moz-range-track {
+        height: 100%;
+        background-color: transparent;
+        border: 0;
+    }
+
+    .comparador__manija::-webkit-slider-thumb {
+        appearance: none;
+        width: var(--manija-lado);
+        height: var(--manija-lado);
+        border: 2px solid var(--color-azul-profundo);
+        border-radius: 9999px;
+        background-color: var(--color-white);
+        box-shadow: var(--shadow-pieza);
+        cursor: ew-resize;
+    }
+
+    .comparador__manija::-moz-range-thumb {
+        width: var(--manija-lado);
+        height: var(--manija-lado);
+        border: 2px solid var(--color-azul-profundo);
+        border-radius: 9999px;
+        background-color: var(--color-white);
+        box-shadow: var(--shadow-pieza);
+        cursor: ew-resize;
+    }
+
+    /* Mientras se arrastra, la foto sigue al dedo sin retardo. */
+    .comparador[data-arrastrando] .comparador__foto--antes {
+        transition: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .comparador .comparador__foto--antes {
+            transition: none;
+        }
+    }
+}
+
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }

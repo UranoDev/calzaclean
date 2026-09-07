@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'sitio.inicio')->name('home');
+Route::view('precios', 'sitio.precios')->name('precios');
 
 Route::middleware(['auth'])->prefix('panel')->name('panel.')->group(function () {
     Route::view('/', 'panel.inicio')->name('inicio');

@@ -1,21 +1,30 @@
 @props([
     'titulo' => null,
     'descripcion' => null,
+    'vistaPrevia' => null,
+    'minimo' => false,
 ])
 
 @php
-    $anclas = [
+    // Las anclas del menú apuntan a las secciones de la portada. La de
+    // Preguntas y la de Contacto solo se listan cuando esas secciones existen:
+    // sin Preguntas publicadas y con el Negocio vacío no se dibujan.
+    $negocio = \App\Models\Negocio::actual();
+
+    $anclas = array_values(array_filter([
         ['ancla' => '#servicios', 'texto' => 'Servicios'],
         ['ancla' => '#trabajos', 'texto' => 'Antes y después'],
         ['ancla' => '#como-funciona', 'texto' => 'Cómo funciona'],
         ['ancla' => '#materiales', 'texto' => 'Materiales'],
-        ['ancla' => '#preguntas', 'texto' => 'Preguntas'],
-        ['ancla' => '#contacto', 'texto' => 'Contacto'],
-    ];
+        ['ancla' => '#preguntas', 'texto' => 'Preguntas', 'se_muestra' => \App\Models\Pregunta::query()->publicadas()->exists()],
+        ['ancla' => '#contacto', 'texto' => 'Contacto', 'se_muestra' => $negocio->contacto_visible],
+    ], fn (array $enlace): bool => $enlace['se_muestra'] ?? true));
 
     // Las redes salen del Negocio: una sin URL no se dibuja, y cargarla desde
     // el Panel la hace aparecer sin tocar esta vista.
-    $redes = \App\Models\Negocio::actual()->redes;
+    $redes = $negocio->redes;
+
+    $tituloCompleto = filled($titulo) ? $titulo.' — '.config('app.name') : config('app.name');
 @endphp
 
 <!DOCTYPE html>
@@ -24,10 +33,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>{{ filled($titulo) ? $titulo.' — '.config('app.name') : config('app.name') }}</title>
+    <title>{{ $tituloCompleto }}</title>
 
     @if (filled($descripcion))
         <meta name="description" content="{{ $descripcion }}" />
+    @endif
+
+    {{-- Lo que se ve cuando alguien pega el enlace en una conversación. --}}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="{{ config('app.name') }}" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:title" content="{{ $tituloCompleto }}" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+
+    @if (filled($descripcion))
+        <meta property="og:description" content="{{ $descripcion }}" />
+    @endif
+
+    @if (filled($vistaPrevia))
+        <meta property="og:image" content="{{ url($vistaPrevia) }}" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
     @endif
 
     <meta name="theme-color" content="#214966" />
@@ -49,6 +76,7 @@
         <x-contenedor class="flex h-encabezado items-center justify-between gap-3">
             <x-logo-calzaclean />
 
+            @unless ($minimo)
             <nav aria-label="Secciones del sitio" class="hidden lg:block">
                 <ul class="flex items-center gap-6">
                     @foreach ($anclas as $enlace)
@@ -85,6 +113,7 @@
                     </nav>
                 </details>
             </div>
+            @endunless
         </x-contenedor>
     </header>
 
@@ -94,6 +123,7 @@
         {{ $slot }}
     </main>
 
+    @unless ($minimo)
     <footer class="mt-seccion bg-azul-calzaclean text-white">
         <x-contenedor class="flex flex-col gap-8 py-seccion md:flex-row md:items-start md:justify-between">
             <div class="max-w-md">
@@ -121,7 +151,9 @@
             </div>
         </x-contenedor>
     </footer>
+    @endunless
 
+    @unless ($minimo)
     <script>
         // El menú de secciones se cierra al elegir un ancla.
         document.querySelectorAll('[data-menu] a').forEach(function (enlace) {
@@ -130,5 +162,6 @@
             });
         });
     </script>
+    @endunless
 </body>
 </html>

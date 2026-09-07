@@ -1,45 +1,77 @@
 @php
-    // El esqueleto del Sitio: cada sección queda rotulada y vacía. Las tareas
-    // siguientes llenan el hueco sin volver a tocar el layout.
-    $secciones = [
-        ['id' => 'servicios', 'titulo' => 'Servicios y precios'],
-        ['id' => 'trabajos', 'titulo' => 'Antes y después'],
-        ['id' => 'como-funciona', 'titulo' => 'Cómo funciona'],
-        ['id' => 'materiales', 'titulo' => 'Materiales'],
-        ['id' => 'preguntas', 'titulo' => 'Preguntas frecuentes'],
-        ['id' => 'testimonios', 'titulo' => 'Testimonios'],
-        ['id' => 'contacto', 'titulo' => 'Contacto'],
-    ];
+    // El esqueleto del Sitio: la portada y, debajo, una sección por bloque de
+    // contenido. La sección que se queda sin contenido publicado no se dibuja,
+    // ni con su encabezado ni con un texto de relleno.
+    $negocio = \App\Models\Negocio::actual();
+
+    $secciones = array_values(array_filter([
+        [
+            'id' => 'servicios',
+            'titulo' => 'Servicios y precios',
+            'guia' => 'Precios por par, según el material y el tipo de limpieza.',
+            'componente' => 'lista-precios',
+            'atributos' => ['enlace' => true],
+        ],
+        [
+            'id' => 'trabajos',
+            'titulo' => 'Antes y después',
+            'guia' => 'Pares que salieron del taller, con su material y el servicio que se les aplicó.',
+            'componente' => 'galeria-trabajos',
+        ],
+        [
+            'id' => 'como-funciona',
+            'titulo' => 'Cómo funciona',
+            'guia' => 'De la foto por WhatsApp a la entrega, en cuatro pasos.',
+            'componente' => 'como-funciona',
+        ],
+        [
+            'id' => 'materiales',
+            'titulo' => 'Materiales',
+            'guia' => 'Qué se le hace a cada material y con qué. El material define qué servicio le toca al par.',
+            'componente' => 'materiales',
+        ],
+        [
+            'id' => 'preguntas',
+            'titulo' => 'Preguntas frecuentes',
+            'guia' => 'Lo que más nos preguntan antes de encargarnos un par.',
+            'componente' => 'preguntas-frecuentes',
+            'se_muestra' => \App\Models\Pregunta::query()->publicadas()->exists(),
+        ],
+        [
+            'id' => 'testimonios',
+            'titulo' => 'Testimonios',
+            'guia' => 'Lo que dicen los clientes que ya recibieron su par.',
+            'componente' => 'testimonios',
+            'se_muestra' => \App\Models\Testimonio::query()->publicados()->exists(),
+        ],
+        [
+            'id' => 'contacto',
+            'titulo' => 'Contacto',
+            'componente' => 'contacto-negocio',
+            'se_muestra' => $negocio->contacto_visible,
+        ],
+    ], fn (array $seccion): bool => $seccion['se_muestra'] ?? true));
 @endphp
 
 <x-layouts.publico
     descripcion="Limpieza y restauración de tenis a mano en San Juan del Río, Querétaro. Cada material lleva su técnica y su producto."
 >
-    <section id="portada" class="bg-white">
-        <x-contenedor class="py-seccion-amplia">
-            <div class="max-w-3xl">
-                <h1 class="font-titulo text-portada font-bold tracking-tight text-azul-profundo">
-                    Cada material, su técnica.
-                </h1>
-
-                <p class="mt-6 max-w-xl text-guia text-gris-pizarra">
-                    Limpieza y restauración de tenis a mano en San Juan del Río, Querétaro. Gamuza, ante, piel, cuero, lona y sintético, cada uno con su producto.
-                </p>
-
-                <div class="mt-8 flex flex-wrap items-center gap-3">
-                    <x-boton-whatsapp mensaje="Hola, quiero información sobre la limpieza de mis tenis." />
-                    <x-boton href="#servicios" variante="secundario">Ver servicios y precios</x-boton>
-                </div>
-            </div>
-        </x-contenedor>
-    </section>
+    <x-portada />
 
     @foreach ($secciones as $indice => $seccion)
         <section id="{{ $seccion['id'] }}" class="{{ $indice % 2 === 0 ? 'bg-blanco-humo' : 'bg-white' }}">
             <x-contenedor class="py-seccion">
-                <x-encabezado-seccion :titulo="$seccion['titulo']" />
+                <x-encabezado-seccion :titulo="$seccion['titulo']">
+                    @isset($seccion['guia'])
+                        {{ $seccion['guia'] }}
+                    @endisset
+                </x-encabezado-seccion>
 
-                <div class="mt-8 h-40 rounded-tarjeta border border-dashed border-azul-claro-borde bg-azul-claro-tenue" aria-hidden="true"></div>
+                <x-dynamic-component
+                    :component="$seccion['componente']"
+                    class="mt-8"
+                    :attributes="new \Illuminate\View\ComponentAttributeBag($seccion['atributos'] ?? [])"
+                />
             </x-contenedor>
         </section>
     @endforeach
