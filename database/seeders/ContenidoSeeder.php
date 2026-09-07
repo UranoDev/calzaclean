@@ -29,15 +29,12 @@ class ContenidoSeeder extends Seeder
     ];
 
     /**
-     * Los datos del taller. Solo llenan los campos que estén vacíos: lo que la
-     * Dueña haya editado desde el Panel se queda como está.
+     * Los datos del taller que no salen de la semilla de `config/sitio.php`.
      *
      * @var array<string, string>
      */
     private const NEGOCIO = [
-        'whatsapp' => '+52 427 180 3585',
         'direccion' => 'San Juan del Río, Qro.',
-        'instagram' => 'https://www.instagram.com/calza_clean_/',
     ];
 
     public function run(): void
@@ -57,8 +54,16 @@ class ContenidoSeeder extends Seeder
 
         $negocio = Negocio::actual();
 
-        foreach (self::NEGOCIO as $campo => $valor) {
-            if (blank($negocio->{$campo})) {
+        // La semilla de contacto vive en config/sitio.php; el resto, acá
+        // arriba. En los dos casos solo se llena el campo que esté vacío: lo
+        // que la Dueña haya guardado desde el Panel se queda como está.
+        $semilla = self::NEGOCIO + [
+            'whatsapp' => config('sitio.whatsapp'),
+            ...config('sitio.redes', []),
+        ];
+
+        foreach ($semilla as $campo => $valor) {
+            if (blank($negocio->{$campo}) && filled($valor)) {
                 $negocio->{$campo} = $valor;
             }
         }

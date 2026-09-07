@@ -13,7 +13,9 @@
         ['ancla' => '#contacto', 'texto' => 'Contacto'],
     ];
 
-    $redes = config('sitio.redes', []);
+    // Las redes salen del Negocio: una sin URL no se dibuja, y cargarla desde
+    // el Panel la hace aparecer sin tocar esta vista.
+    $redes = \App\Models\Negocio::actual()->redes;
 @endphp
 
 <!DOCTYPE html>
@@ -87,6 +89,8 @@
     </header>
 
     <main id="contenido" class="pt-encabezado">
+        <x-franja-aviso />
+
         {{ $slot }}
     </main>
 

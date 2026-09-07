@@ -40,6 +40,16 @@ class NegocioFactory extends Factory
     }
 
     /**
+     * Sin número de WhatsApp: el Sitio no dibuja ningún botón.
+     */
+    public function sinWhatsapp(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'whatsapp' => null,
+        ]);
+    }
+
+    /**
      * Sin ninguna red cargada.
      */
     public function sinRedes(): static

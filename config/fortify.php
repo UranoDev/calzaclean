@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/dashboard',
+    'home' => '/panel',
 
     /*
     |--------------------------------------------------------------------------
@@ -154,15 +154,14 @@ return [
     | Features
     |--------------------------------------------------------------------------
     |
-    | Some of the Fortify features are optional. You may disable the features
-    | by removing them from this array. You're free to only remove some of
-    | these features, or you can even remove all of these if you need to.
+    | El Panel tiene una sola usuaria, la Dueña, y su cuenta se crea con el
+    | comando `php artisan calzaclean:crear-duena`. Por eso no está el registro
+    | público. La recuperación por correo tampoco: el correo del negocio sigue
+    | sin definirse (ver CONTEXT.md § Lo que sigue abierto).
     |
     */
 
     'features' => [
-        Features::registration(),
-        Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([
             'confirm' => true,

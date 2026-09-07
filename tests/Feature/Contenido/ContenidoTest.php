@@ -56,6 +56,17 @@ class ContenidoTest extends TestCase
         $this->assertSame(['Centro'], ColoniaRecoleccion::query()->activas()->pluck('nombre')->all());
     }
 
+    public function test_solo_un_trabajo_publicado_le_pone_foto_al_testimonio(): void
+    {
+        $testimonio = Testimonio::factory()->conTrabajo()->create();
+
+        $this->assertNotNull($testimonio->trabajoVisible());
+
+        $testimonio->trabajo->update(['publicado' => false]);
+
+        $this->assertNull($testimonio->fresh()->trabajoVisible());
+    }
+
     public function test_los_testimonios_pueden_no_tener_trabajo(): void
     {
         $testimonio = Testimonio::factory()->create();

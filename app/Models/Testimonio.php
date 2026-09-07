@@ -39,6 +39,22 @@ class Testimonio extends Model
     }
 
     /**
+     * El Trabajo cuya foto acompaña al Testimonio. Solo cuenta si sigue
+     * existiendo, está publicado y tiene su foto de después: un Testimonio de
+     * un Trabajo despublicado o borrado se sigue mostrando, sin foto.
+     */
+    public function trabajoVisible(): ?Trabajo
+    {
+        $trabajo = $this->trabajo;
+
+        if ($trabajo === null || ! $trabajo->publicado || blank($trabajo->foto_despues)) {
+            return null;
+        }
+
+        return $trabajo;
+    }
+
+    /**
      * @param  Builder<$this>  $query
      */
     #[Scope]

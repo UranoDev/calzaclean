@@ -1,11 +1,11 @@
-@props(['enlace' => true, 'alto' => 'h-8'])
+@props(['enlace' => true, 'alto' => 'h-8', 'href' => null])
 
 @php
     $etiqueta = $enlace ? 'a' : 'span';
 @endphp
 
 <{{ $etiqueta }}
-    @if ($enlace) href="{{ url('/') }}" aria-label="CalzaClean, inicio" @endif
+    @if ($enlace) href="{{ $href ?? url('/') }}" aria-label="CalzaClean, inicio" @endif
     {{ $attributes->class([
         'inline-flex items-center',
         'rounded-suave focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-azul-profundo' => $enlace,

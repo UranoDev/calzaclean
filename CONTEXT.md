@@ -69,8 +69,14 @@ que lo baja a menos de 24 horas por +$100.
 **Cliente** — quien lleva sus tenis. **No tiene cuenta.** El sitio no tiene login
 para clientes ni los guarda en base de datos.
 
-**Dueña** — la única persona con acceso al Panel. No hay registro público: su usuario
-se crea con un comando de artisan.
+**Dueña** — quien atiende el taller y edita el contenido. Es el público para el que
+se diseña el Panel.
+
+**Cuenta del Panel** — un acceso al Panel. **No hay registro público**: las cuentas se
+crean con un comando de artisan. Hoy hay dos, la Dueña y quien mantiene el sitio, y
+**las dos tienen el mismo acceso**: el Panel no distingue permisos ni roles. Si algún
+día hiciera falta distinguirlos, eso es una decisión nueva, no algo que se cuele en
+una tarea.
 
 **Panel** — la parte privada, en `/panel`. Cuatro entradas: **Trabajos**, **Precios**,
 **Ajustes** y **Preguntas y testimonios**. Ajustes se abre en tres pantallas:

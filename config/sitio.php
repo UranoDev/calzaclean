@@ -4,30 +4,27 @@ return [
 
     /*
     |---------------------------------------------------------------------------
-    | WhatsApp del Negocio
+    | Semilla del Negocio
     |---------------------------------------------------------------------------
     |
-    | Número al que apuntan todos los botones de WhatsApp del Sitio, con lada de
-    | país y sin signos. Mientras esté vacío, los botones de WhatsApp no se
-    | dibujan.
+    | Los datos de contacto que se cargan la primera vez, desde el seeder. La
+    | fuente de verdad es el renglón del Negocio, que la Dueña edita en
+    | Ajustes › Contacto: lo que hay acá solo llena un campo que todavía está
+    | vacío y nunca pisa lo que ella guardó.
+    |
+    | El WhatsApp se guarda normalizado por el modelo, así que acá puede ir con
+    | espacios o con +. Cada red lleva la URL completa del perfil; la que se
+    | deje vacía no se dibuja en el pie del Sitio.
     |
     */
 
-    'whatsapp' => env('SITIO_WHATSAPP'),
+    'whatsapp' => env('SITIO_WHATSAPP', '+52 427 180 3585'),
 
-    /*
-    |---------------------------------------------------------------------------
-    | Redes del Negocio
-    |---------------------------------------------------------------------------
-    |
-    | Cada entrada lleva 'nombre' y 'url'. El pie solo dibuja las que estén aquí.
-    |
-    */
-
-    'redes' => array_values(array_filter([
-        filled(env('SITIO_INSTAGRAM')) ? ['nombre' => 'Instagram', 'url' => env('SITIO_INSTAGRAM')] : null,
-        filled(env('SITIO_FACEBOOK')) ? ['nombre' => 'Facebook', 'url' => env('SITIO_FACEBOOK')] : null,
-        filled(env('SITIO_TIKTOK')) ? ['nombre' => 'TikTok', 'url' => env('SITIO_TIKTOK')] : null,
-    ])),
+    'redes' => [
+        'instagram' => env('SITIO_INSTAGRAM', 'https://www.instagram.com/calza_clean_/'),
+        'facebook' => env('SITIO_FACEBOOK', 'https://www.facebook.com/people/Calzaclean/61584140572641/'),
+        'x' => env('SITIO_X'),
+        'tiktok' => env('SITIO_TIKTOK'),
+    ],
 
 ];

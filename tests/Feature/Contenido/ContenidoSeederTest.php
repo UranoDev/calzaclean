@@ -68,9 +68,15 @@ class ContenidoSeederTest extends TestCase
 
         $negocio = Negocio::actual();
 
-        $this->assertSame('+52 427 180 3585', $negocio->whatsapp);
+        $this->assertSame('524271803585', $negocio->whatsapp);
         $this->assertSame('San Juan del Río, Qro.', $negocio->direccion);
         $this->assertSame('https://www.instagram.com/calza_clean_/', $negocio->instagram);
+        $this->assertSame('https://www.facebook.com/people/Calzaclean/61584140572641/', $negocio->facebook);
+
+        // El taller todavía no tiene X ni TikTok: se quedan vacías y el pie no
+        // las dibuja.
+        $this->assertNull($negocio->x);
+        $this->assertNull($negocio->tiktok);
     }
 
     public function test_no_pisa_lo_que_la_duena_ya_edito_en_el_negocio(): void

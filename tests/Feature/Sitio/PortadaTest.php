@@ -2,10 +2,14 @@
 
 namespace Tests\Feature\Sitio;
 
+use App\Models\Negocio;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PortadaTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_la_portada_responde_y_lleva_la_linea_comercial(): void
     {
         $response = $this->get(route('home'));
@@ -32,7 +36,7 @@ class PortadaTest extends TestCase
 
     public function test_el_boton_de_whatsapp_apunta_al_numero_del_negocio(): void
     {
-        config(['sitio.whatsapp' => '52 442 123 4567']);
+        Negocio::factory()->create(['whatsapp' => '52 442 123 4567']);
 
         $response = $this->get(route('home'));
 
@@ -41,7 +45,7 @@ class PortadaTest extends TestCase
 
     public function test_sin_numero_cargado_no_se_muestra_el_boton_de_whatsapp(): void
     {
-        config(['sitio.whatsapp' => null]);
+        Negocio::factory()->sinWhatsapp()->create();
 
         $response = $this->get(route('home'));
 
@@ -51,7 +55,7 @@ class PortadaTest extends TestCase
 
     public function test_el_pie_no_dibuja_redes_cuando_no_hay_ninguna_cargada(): void
     {
-        config(['sitio.redes' => []]);
+        Negocio::factory()->sinRedes()->create();
 
         $response = $this->get(route('home'));
 

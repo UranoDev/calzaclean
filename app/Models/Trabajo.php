@@ -8,6 +8,7 @@ use Database\Factories\TrabajoFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,13 +21,14 @@ use Illuminate\Support\Carbon;
  * Servicio que se le aplicó.
  *
  * @property int $id
- * @property string $titulo
+ * @property string|null $titulo
  * @property Material $material
  * @property int|null $servicio_id
  * @property string $foto_antes ruta base de la foto de antes, sin variante ni extensión
  * @property string $foto_despues ruta base de la foto de después, sin variante ni extensión
  * @property int $orden
  * @property bool $publicado
+ * @property string $titulo_en_pantalla
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
@@ -82,6 +84,56 @@ class Trabajo extends Model
     public function testimonios(): HasMany
     {
         return $this->hasMany(Testimonio::class);
+    }
+
+    /**
+     * Cómo se rotula el par en el Sitio. El título es opcional; sin título, el
+     * Trabajo se presenta por su Material.
+     *
+     * @return Attribute<string, never>
+     */
+    protected function tituloEnPantalla(): Attribute
+    {
+        return Attribute::get(fn (): string => filled($this->titulo)
+            ? $this->titulo
+            : $this->material->etiqueta());
+    }
+
+    /**
+     * El número de orden que le toca a un Trabajo nuevo: el último de la lista.
+     */
+    public static function siguienteOrden(): int
+    {
+        return (int) static::query()->max('orden') + 1;
+    }
+
+    /**
+     * Mueve el Trabajo un lugar en la lista. Renumera a todos, porque dos
+     * Trabajos con el mismo orden dejan la lista a merced del desempate.
+     *
+     * @param  int  $desplazamiento  -1 para subir, 1 para bajar
+     */
+    public function mover(int $desplazamiento): void
+    {
+        $ids = static::query()->ordenados()->pluck('id')->all();
+
+        $posicion = array_search($this->id, $ids, true);
+
+        if (! is_int($posicion)) {
+            return;
+        }
+
+        $destino = $posicion + $desplazamiento;
+
+        if ($destino < 0 || $destino >= count($ids)) {
+            return;
+        }
+
+        [$ids[$posicion], $ids[$destino]] = [$ids[$destino], $ids[$posicion]];
+
+        foreach ($ids as $orden => $id) {
+            static::query()->whereKey($id)->update(['orden' => $orden + 1]);
+        }
     }
 
     /**

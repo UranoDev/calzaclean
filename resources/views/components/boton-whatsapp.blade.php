@@ -4,12 +4,10 @@
 ])
 
 @php
-    // Sin número cargado no hay conversación a dónde mandar a nadie: no se dibuja
-    // el botón. El número vive en config/sitio.php (clave SITIO_WHATSAPP).
-    $telefono = preg_replace('/\D/', '', (string) config('sitio.whatsapp'));
-    $enlace = $telefono === ''
-        ? null
-        : 'https://wa.me/'.$telefono.(filled($mensaje) ? '?text='.rawurlencode($mensaje) : '');
+    // El número vive en el Negocio y lo edita la Dueña en Ajustes › Contacto.
+    // Sin número cargado no hay conversación a dónde mandar a nadie y el botón
+    // no se dibuja.
+    $enlace = \App\Models\Negocio::actual()->enlaceWhatsapp($mensaje);
 @endphp
 
 @if ($enlace)

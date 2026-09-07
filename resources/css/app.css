@@ -51,7 +51,9 @@
     --spacing-contenedor: 1.25rem;
     --spacing-seccion: 4rem;
     --spacing-seccion-amplia: 6rem;
+    --spacing-barra: 4.5rem;
     --container-sitio: 72rem;
+    --container-panel: 60rem;
 
     /* --- Radios ---------------------------------------------------------- */
     --radius-suave: 0.5rem;
