@@ -113,18 +113,31 @@ lo cual se resuelve dejando un `deploy.sh` en el servidor:
 #!/usr/bin/env bash
 set -e
 cd ~/httpdocs
+
+# Las rutas de PHP y Composer cambian entre instalaciones de Plesk, así que se
+# resuelven en vez de escribirse a mano. Si hay varias versiones de PHP, gana la mayor.
+PHP=$(ls -d /opt/plesk/php/8.*/bin/php 2>/dev/null | sort -V | tail -1)
+PHP=${PHP:-$(command -v php)}
+COMPOSER=$(command -v composer || echo "$HOME/bin/composer")
+
 git pull
-/opt/plesk/php/8.3/bin/php ~/bin/composer install --no-dev --optimize-autoloader
+"$PHP" "$COMPOSER" install --no-dev --optimize-autoloader
 npm ci && npm run build
-/opt/plesk/php/8.3/bin/php artisan migrate --force
-/opt/plesk/php/8.3/bin/php artisan config:cache
-/opt/plesk/php/8.3/bin/php artisan route:cache
-/opt/plesk/php/8.3/bin/php artisan view:cache
-echo "Listo."
+"$PHP" artisan migrate --force
+"$PHP" artisan config:cache
+"$PHP" artisan route:cache
+"$PHP" artisan view:cache
+echo "Listo con PHP $("$PHP" -r 'echo PHP_VERSION;')"
 ```
 
-El `set -e` es lo que importa: si `migrate` falla, el script se detiene ahí en vez de
-seguir cacheando configuración sobre una base a medio migrar.
+Dos cosas del script:
+
+- **`set -e`.** Si `migrate` falla, se detiene ahí en vez de seguir cacheando
+  configuración sobre una base a medio migrar.
+- **Nada de rutas escritas a mano.** `/opt/plesk/php/8.3/bin/php` y la ubicación de
+  Composer cambian entre servidores y entre versiones de Plesk; resolverlas en el script
+  evita que el despliegue se rompa el día que Plesk se actualice. La última línea imprime
+  qué PHP se usó, para verlo sin adivinar.
 
 ### 3.2 Modo de despliegue: manual
 
@@ -140,32 +153,30 @@ código nuevo quedaría corriendo contra un esquema viejo durante los segundos q
 En la misma pantalla, Plesk deja definir comandos que corren después de traer los
 archivos. Ahí va todo lo que de otro modo habría que teclear a mano:
 
-```bash
-/opt/plesk/php/8.3/bin/php ~/bin/composer install --no-dev --optimize-autoloader
-npm ci
-npm run build
-/opt/plesk/php/8.3/bin/php artisan migrate --force
-/opt/plesk/php/8.3/bin/php artisan config:cache
-/opt/plesk/php/8.3/bin/php artisan route:cache
-/opt/plesk/php/8.3/bin/php artisan view:cache
-```
-
-**La ruta completa de PHP no es un capricho.** El `php` que encuentra la shell suele ser
-la versión del sistema, casi siempre más vieja que la del dominio, y `composer install`
-resolvería dependencias para la versión equivocada. Ajusta `8.3` a la versión elegida en
-el paso 1.
-
-#### Dónde está Composer
-
-**No hay una ruta fija.** Depende de la versión de Plesk y de si la extensión *PHP
-Composer* está instalada. Búscalo antes de escribir las acciones:
+Lo más simple es que llamen al mismo `deploy.sh` de la sección anterior, que ya resuelve
+las rutas solo:
 
 ```bash
-which composer
-find /usr/lib/plesk-9.0 /usr/local/psa /opt/plesk -maxdepth 4 -name "composer*" 2>/dev/null | head
+bash ~/deploy.sh
 ```
 
-Si no aparece, conviene **instalarlo para el usuario** y dejar de depender de Plesk:
+Si prefieres escribirlas sueltas, resuelve las rutas primero — **no las escribas a
+mano**, cambian entre servidores y entre versiones de Plesk:
+
+```bash
+command -v php; ls -d /opt/plesk/php/8.*/bin/php
+command -v composer
+```
+
+El `php` que encuentra la shell suele ser la versión del sistema, casi siempre más vieja
+que la del dominio; usar esa haría que `composer install` resuelva dependencias para la
+versión equivocada, con un error que no menciona la versión de PHP por ningún lado.
+
+#### Si Composer no aparece
+
+Significa que la extensión *PHP Composer* de Plesk no está instalada. Se puede instalar
+desde *Extensiones*, o —mejor— **instalarlo para el usuario** y dejar de depender de
+Plesk:
 
 ```bash
 cd ~
