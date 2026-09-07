@@ -20,7 +20,10 @@ Route::middleware(['auth'])->prefix('panel')->name('panel.')->group(function () 
     Route::view('preguntas', 'panel.preguntas')->name('preguntas');
 
     // Ajustes se abre en tres pantallas; la entrada del menú lleva a la primera.
-    Route::redirect('ajustes', 'panel/ajustes/contacto')->name('ajustes');
+    // El destino lleva barra inicial a propósito: sin ella, Route::redirect
+    // emite un Location relativo y el navegador lo resuelve contra /panel/,
+    // dejando /panel/panel/ajustes/contacto.
+    Route::redirect('ajustes', '/panel/ajustes/contacto')->name('ajustes');
     Route::view('ajustes/contacto', 'panel.ajustes.contacto')->name('ajustes.contacto');
     Route::view('ajustes/negocio', 'panel.ajustes.negocio')->name('ajustes.negocio');
     Route::view('ajustes/aviso', 'panel.ajustes.aviso')->name('ajustes.aviso');

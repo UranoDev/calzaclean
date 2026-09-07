@@ -102,6 +102,20 @@ class AccesoAlPanelTest extends TestCase
         }
     }
 
+    public function test_ajustes_redirige_a_contacto_con_una_ruta_absoluta(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $respuesta = $this->get(route('panel.ajustes'));
+
+        // Route::redirect con un destino sin barra inicial emite un Location
+        // relativo, y el navegador lo resuelve contra /panel/ dejando
+        // /panel/panel/ajustes/contacto. Lo que se afirma es que el destino
+        // arranque desde la raíz: absoluto o desde `/`, pero nunca relativo.
+        $respuesta->assertRedirect(route('panel.ajustes.contacto'));
+        $respuesta->assertHeader('Location', parse_url(route('panel.ajustes.contacto'), PHP_URL_PATH));
+    }
+
     public function test_el_panel_lleva_la_navegacion_de_las_cuatro_entradas_en_cada_pantalla(): void
     {
         $this->actingAs(User::factory()->create());
