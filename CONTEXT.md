@@ -30,7 +30,7 @@ especializada ($170), limpieza infantil ($100), botas ($150), bolsas ($185),
 mochilas ($200). Tiene nombre, a qué materiales aplica, precio y si está activo.
 
 **Extra** — un Servicio que **se suma al precio base y nunca se vende solo**:
-blanqueamiento de suelas (+$50) y entrega express (+$100, menos de 24 horas). Es un
+blanqueamiento de suelas (+$50) y entrega express (+$100, en 24 horas). Es un
 Servicio con la bandera `es_extra` levantada, no otra entidad. En pantalla siempre
 se escribe con el signo de más por delante.
 
@@ -75,7 +75,7 @@ cuando existe, el Trabajo al que corresponde.
 
 **Tiempo de entrega** — **72 horas**. Confirmado por la Dueña el 6 de septiembre de
 2026: se puede escribir como promesa en presente. La **entrega express** es el Extra
-que lo baja a menos de 24 horas por +$100.
+que lo baja a 24 horas por +$100.
 
 **Cliente** — quien lleva sus tenis. **No tiene cuenta.** El sitio no tiene login
 para clientes ni los guarda en base de datos.

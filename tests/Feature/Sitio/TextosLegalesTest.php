@@ -84,7 +84,7 @@ class TextosLegalesTest extends TestCase
     {
         $this->get(route('terminos-y-condiciones'))
             ->assertSee('La entrega es en 72 horas, contadas desde que el par queda en el taller.')
-            ->assertSee('el par sale en menos de 24 horas')
+            ->assertSee('el par sale en 24 horas')
             ->assertSee('Si un precio de esta página no coincide con esa lista, el que vale es el de la lista.')
             ->assertSee(route('precios'), false);
     }

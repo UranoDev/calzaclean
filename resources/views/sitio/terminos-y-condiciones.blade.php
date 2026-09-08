@@ -25,7 +25,7 @@
             'titulo' => 'Tiempo de entrega',
             'parrafos' => [
                 'La entrega es en 72 horas, contadas desde que el par queda en el taller.',
-                'Con la entrega express, +$100, el par sale en menos de 24 horas. Se pide al dejarlo y se suma al precio del servicio.',
+                'Con la entrega express, +$100, el par sale en 24 horas. Se pide al dejarlo y se suma al precio del servicio.',
                 'Cuando el par está listo, el taller escribe por WhatsApp al número con el que se levantó la orden.',
             ],
         ],
