@@ -10,8 +10,8 @@
     ya dejan la conversación a un toque.
 --}}
 <div data-flotante hidden class="fixed bottom-4 right-4 z-40 print:hidden">
-    <x-boton-whatsapp :origen="$origen" compacto class="shadow-pieza sm:hidden" />
-    <x-boton-whatsapp :origen="$origen" class="hidden shadow-pieza sm:inline-flex" />
+    {{-- Uno solo, y redondo: a 56 px se acierta con el pulgar sin mirar. --}}
+    <x-boton-whatsapp :origen="$origen" compacto flotante class="rounded-full shadow-pieza" />
 </div>
 
 <script>

@@ -2,6 +2,7 @@
     'origen' => 'contacto',
     'sobre' => null,
     'compacto' => false,
+    'flotante' => false,
     'variante' => 'boton',
     'foco' => 'marca',
 ])
@@ -33,7 +34,8 @@
             'inline-flex items-center justify-center gap-2 font-titulo font-semibold transition-colors',
             'focus-visible:outline-2 focus-visible:outline-offset-2',
             'rounded-pieza bg-verde-accion text-white hover:bg-verde-accion-hover' => $variante === 'boton',
-            'size-11 shrink-0' => $variante === 'boton' && $compacto,
+            'size-11 shrink-0' => $variante === 'boton' && $compacto && ! $flotante,
+            'size-14 shrink-0' => $variante === 'boton' && $compacto && $flotante,
             'px-5 py-3 text-menu' => $variante === 'boton' && ! $compacto,
             'text-menu text-azul-profundo underline-offset-4 hover:underline' => $variante === 'enlace',
             'focus-visible:outline-white' => $foco === 'claro',

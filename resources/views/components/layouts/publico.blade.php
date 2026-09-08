@@ -120,8 +120,11 @@
             </nav>
 
             <div class="flex items-center gap-2">
-                <x-boton-whatsapp compacto class="lg:hidden" />
-                <x-boton-whatsapp class="hidden lg:inline-flex" />
+                {{-- El `hidden` va en el envoltorio y no en el botón: el
+                     componente ya trae `inline-flex`, que en la hoja compilada
+                     va después y le gana, así que se dibujaban los dos. --}}
+                <span class="lg:hidden"><x-boton-whatsapp compacto /></span>
+                <span class="hidden lg:block"><x-boton-whatsapp /></span>
 
                 <details class="relative lg:hidden" data-menu>
                     <summary class="flex size-11 cursor-pointer list-none items-center justify-center rounded-pieza border border-azul-claro-borde bg-white text-azul-profundo [&::-webkit-details-marker]:hidden" aria-label="Abrir el menú de secciones">
