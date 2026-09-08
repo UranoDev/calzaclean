@@ -18,7 +18,7 @@
 
     $anclas = array_values(array_filter([
         ['ancla' => '#servicios', 'texto' => 'Servicios'],
-        ['ancla' => '#trabajos', 'texto' => 'Antes y después'],
+        ['ancla' => '#trabajos', 'texto' => 'Resultados'],
         ['ancla' => '#como-funciona', 'texto' => 'Cómo funciona'],
         ['ancla' => '#materiales', 'texto' => 'Materiales'],
         ['ancla' => '#preguntas', 'texto' => 'Preguntas', 'se_muestra' => \App\Models\Pregunta::query()->publicadas()->exists()],

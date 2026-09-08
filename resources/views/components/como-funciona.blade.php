@@ -10,18 +10,19 @@
             'detalle' => 'Con la foto te decimos qué servicio le toca a tu par y cuánto cuesta.',
         ],
         [
-            'titulo' => 'Dejas el par',
-            'detalle' => $zonas->isNotEmpty()
-                ? 'Lo traes al taller, en San Juan del Río, o pasamos por él si tu zona está en la lista de abajo.'
-                : 'Lo traes al taller, en San Juan del Río.',
+            'titulo' => 'Dejas el par y te decimos cuándo estará listo',
+            'detalle' => ($zonas->isNotEmpty()
+                ? 'Lo traes al taller, en San Juan del Río, o pasamos por él si tu zona está en la lista de abajo. '
+                : 'Lo traes al taller, en San Juan del Río. ')
+                .'La entrega es en 72 horas; con el servicio express, +$100, sale en menos de 24.',
         ],
         [
             'titulo' => 'Lo lavamos a mano según el material',
             'detalle' => 'Cada par se cepilla y se lava a mano. Gamuza, ante, piel, cuero, lona y sintético llevan cada uno su producto.',
         ],
         [
-            'titulo' => 'Te avisamos cuando está',
-            'detalle' => 'La entrega es en 72 horas. Con la entrega express, +$100, sale en menos de 24.',
+            'titulo' => 'Pasas por tus tenis, completamente renovados',
+            'detalle' => 'Te escribimos por WhatsApp en cuanto están listos.',
         ],
     ];
 @endphp

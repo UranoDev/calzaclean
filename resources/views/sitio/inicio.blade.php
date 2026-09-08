@@ -14,8 +14,8 @@
         ],
         [
             'id' => 'trabajos',
-            'titulo' => 'Antes y después',
-            'guia' => 'Pares que salieron del taller, con su material y el servicio que se les aplicó.',
+            'titulo' => 'Resultados',
+            'guia' => 'Pares que salieron del taller. Desliza la manija para ver el antes y el después de cada uno.',
             'componente' => 'galeria-trabajos',
         ],
         [

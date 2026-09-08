@@ -19,7 +19,7 @@ class ComoFuncionaTest extends TestCase
         $this->assertStringContainsString('Nos escribes por WhatsApp con una foto', $html);
         $this->assertStringContainsString('Dejas el par', $html);
         $this->assertStringContainsString('Lo lavamos a mano según el material', $html);
-        $this->assertStringContainsString('Te avisamos cuando está', $html);
+        $this->assertStringContainsString('Pasas por tus tenis, completamente renovados', $html);
     }
 
     public function test_los_pasos_se_leen_en_orden(): void
@@ -30,7 +30,7 @@ class ComoFuncionaTest extends TestCase
             strpos($html, 'Nos escribes por WhatsApp con una foto'),
             strpos($html, 'Dejas el par'),
             strpos($html, 'Lo lavamos a mano según el material'),
-            strpos($html, 'Te avisamos cuando está'),
+            strpos($html, 'Pasas por tus tenis, completamente renovados'),
         ];
 
         $ordenadas = $posiciones;
@@ -49,8 +49,9 @@ class ComoFuncionaTest extends TestCase
 
     public function test_el_paso_de_entrega_dice_72_horas_y_el_extra_express(): void
     {
+        // El plazo se dice al dejar el par, que es cuando la persona pregunta.
         $this->get(route('home'))
-            ->assertSee('La entrega es en 72 horas. Con la entrega express, +$100, sale en menos de 24.', false);
+            ->assertSee('La entrega es en 72 horas; con el servicio express, +$100, sale en menos de 24.', false);
     }
 
     public function test_sin_zonas_activas_no_hay_bloque_de_recoleccion(): void
