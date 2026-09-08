@@ -3,6 +3,10 @@
 Sitio: `calzaclean.com` · Servidor: Plesk con MySQL · Repo:
 `https://github.com/UranoDev/calzaclean.git`
 
+**La raíz de este dominio es `httpdocs`.** Cada dominio del servidor tiene la suya —el de
+urano.dev usa `public_html`— y `~` lleva a la del usuario con el que se abrió la sesión
+SSH. Antes de correr nada, un `pwd` confirma dónde estás parado.
+
 Los datos de negocio ya decididos están en `CONTEXT.md` § Decisiones cerradas. Este
 documento es solo el procedimiento.
 
@@ -19,7 +23,7 @@ documento es solo el procedimiento.
   haya una versión elegida para la carpeta. Se arregla una sola vez:
 
   ```bash
-  cd ~/public_html && nodenv local 22
+  cd ~/httpdocs && nodenv local 22
   ```
 
   Elegir la 22 y no la 25: la 22 es LTS y es la misma línea que se usa en desarrollo.
@@ -34,7 +38,7 @@ documento es solo el procedimiento.
 ## 1. El dominio en Plesk
 
 1. Crear el dominio `calzaclean.com`.
-2. **La raíz del documento tiene que ser `public_html/public`**, no `public_html`. Es el
+2. **La raíz del documento tiene que ser `httpdocs/public`**, no `httpdocs`. Es el
    error más común y el más caro: apuntarla a la raíz del proyecto deja `.env`, el
    código y las dependencias accesibles desde el navegador.
 3. Elegir la versión de PHP y comprobar que GD esté activa.
@@ -61,7 +65,7 @@ En *Sitios web y dominios → calzaclean.com → **Git** → Añadir repositorio
 | Tipo | **Repositorio Git remoto** |
 | URL | `https://github.com/UranoDev/calzaclean.git` |
 | Rama | `master` |
-| Ruta de despliegue | `public_html` |
+| Ruta de despliegue | `httpdocs` |
 
 Dos cosas de esa tabla:
 
@@ -69,8 +73,8 @@ Dos cosas de esa tabla:
   llaves. Si algún día se vuelve privado, Plesk muestra una llave pública SSH que hay
   que registrar en GitHub como *deploy key* con permiso de solo lectura, y la URL pasa
   a la forma `git@github.com:UranoDev/calzaclean.git`.
-- **La ruta de despliegue es `public_html`, no `public_html/public`.** El proyecto entero
-  vive en `public_html`, y la raíz del documento —que se configuró en el paso 1— apunta
+- **La ruta de despliegue es `httpdocs`, no `httpdocs/public`.** El proyecto entero
+  vive en `httpdocs`, y la raíz del documento —que se configuró en el paso 1— apunta
   a la subcarpeta `public`. Confundir estas dos rutas es lo que expone el `.env` a
   internet.
 
@@ -83,12 +87,12 @@ Primero hay que habilitar el acceso: *Sitios web y dominios → Acceso al hostin
 **Acceso al servidor por SSH*** y elegir `/bin/bash`. Plesk lo deja en `/bin/false` por
 omisión, así que sin este paso la conexión se cierra al conectar.
 
-`public_html` no está vacío —Plesk deja su `index.html` de bienvenida—, así que no se puede
+`httpdocs` no está vacío —Plesk deja su `index.html` de bienvenida—, así que no se puede
 clonar encima. Se inicializa y se trae:
 
 ```bash
 ssh usuario@calzaclean.com
-cd ~/public_html
+cd ~/httpdocs
 rm -f index.html favicon.ico
 git init
 git remote add origin https://github.com/UranoDev/calzaclean.git
@@ -99,8 +103,8 @@ git checkout -f -B master origin/master
 Para actualizar después, `git pull` y los comandos de la sección 3.3.
 
 **Una cosa a favor de este camino que conviene entender:** el directorio `.git` queda en
-`public_html`, un nivel arriba de la raíz del documento, que es `public_html/public`. Desde
-internet no se alcanza. Pero si alguien mueve la raíz del documento a `public_html` —el
+`httpdocs`, un nivel arriba de la raíz del documento, que es `httpdocs/public`. Desde
+internet no se alcanza. Pero si alguien mueve la raíz del documento a `httpdocs` —el
 error del paso 1— `.git` se vuelve descargable, y con él **el código completo y todo el
 historial**. Es la segunda razón para no equivocarse en esa ruta.
 
@@ -112,7 +116,7 @@ lo cual se resuelve dejando un `deploy.sh` en el servidor:
 ```bash
 #!/usr/bin/env bash
 set -e
-cd ~/public_html
+cd ~/httpdocs
 git pull
 composer install --no-dev --optimize-autoloader
 npm ci && npm run build
