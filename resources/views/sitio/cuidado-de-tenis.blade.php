@@ -52,6 +52,23 @@
 
     <section class="bg-blanco-humo">
         <x-contenedor class="py-seccion">
+            <x-encabezado-seccion titulo="Cuándo ya toca una limpieza profunda">
+                Cinco señales de que el par pide más que un cepillado.
+            </x-encabezado-seccion>
+
+            <ul role="list" class="mt-8 grid max-w-3xl gap-3">
+                @foreach ($seniales as $senial)
+                    <li class="flex items-start gap-3 rounded-tarjeta border border-azul-claro-borde bg-white p-4">
+                        <span class="mt-2 size-2 shrink-0 rounded-full bg-azul-claro" aria-hidden="true"></span>
+                        <span class="text-cuerpo text-gris-pizarra">{{ $senial }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </x-contenedor>
+    </section>
+
+    <section class="bg-white">
+        <x-contenedor class="py-seccion">
             <x-encabezado-seccion titulo="Seis hábitos que sirven para cualquier material">
                 Ninguno lleva producto especial.
             </x-encabezado-seccion>
@@ -67,7 +84,7 @@
         </x-contenedor>
     </section>
 
-    <section class="bg-white">
+    <section class="bg-blanco-humo">
         <x-contenedor class="py-seccion">
             <x-encabezado-seccion titulo="Material por material">
                 Gamuza, ante, piel, cuero, lona y sintético: cómo guardarlos, qué no hacerles y cada cuánto conviene una limpieza profunda.
@@ -77,22 +94,6 @@
         </x-contenedor>
     </section>
 
-    <section class="bg-blanco-humo">
-        <x-contenedor class="py-seccion">
-            <x-encabezado-seccion titulo="Cuándo ya toca una limpieza profunda">
-                Cinco señales de que el par pide más que un cepillado.
-            </x-encabezado-seccion>
-
-            <ul role="list" class="mt-8 grid max-w-3xl gap-3">
-                @foreach ($seniales as $senial)
-                    <li class="flex items-start gap-3 rounded-tarjeta border border-azul-claro-borde bg-white p-4">
-                        <span class="mt-2 size-2 shrink-0 rounded-full bg-azul-claro" aria-hidden="true"></span>
-                        <span class="text-cuerpo text-gris-pizarra">{{ $senial }}</span>
-                    </li>
-                @endforeach
-            </ul>
-        </x-contenedor>
-    </section>
 
     <section class="bg-white">
         <x-contenedor class="py-seccion">
