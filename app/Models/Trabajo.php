@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Un par ya limpiado que se publica en la galería, con su foto de antes y su
@@ -116,11 +117,20 @@ class Trabajo extends Model
     }
 
     /**
-     * El número de orden que le toca a un Trabajo nuevo: el último de la lista.
+     * Guarda un Trabajo nuevo en la primera posición de la lista: los demás
+     * bajan un lugar y conservan el orden que la Dueña les acomodó.
      */
-    public static function siguienteOrden(): int
+    public function guardarDePrimero(): void
     {
-        return (int) static::query()->max('orden') + 1;
+        DB::transaction(function (): void {
+            // La lista se corre entera antes de insertar. A medias dejaría dos
+            // Trabajos peleando por el mismo lugar. Va por el query builder
+            // crudo para no mover el `updated_at` de pares que no cambiaron.
+            static::query()->toBase()->increment('orden');
+
+            $this->orden = 1;
+            $this->save();
+        });
     }
 
     /**
@@ -147,9 +157,11 @@ class Trabajo extends Model
 
         [$ids[$posicion], $ids[$destino]] = [$ids[$destino], $ids[$posicion]];
 
-        foreach ($ids as $orden => $id) {
-            static::query()->whereKey($id)->update(['orden' => $orden + 1]);
-        }
+        DB::transaction(function () use ($ids): void {
+            foreach ($ids as $orden => $id) {
+                static::query()->whereKey($id)->update(['orden' => $orden + 1]);
+            }
+        });
     }
 
     /**

@@ -257,20 +257,38 @@ class TrabajosDelPanelTest extends TestCase
         $this->assertSame($segundo->id, Trabajo::query()->ordenados()->get()->last()->id);
     }
 
-    public function test_un_trabajo_nuevo_entra_al_final_de_la_lista(): void
+    public function test_un_trabajo_nuevo_encabeza_la_lista_y_la_galeria(): void
     {
-        Trabajo::factory()->create(['titulo' => 'El que ya estaba', 'orden' => 1]);
+        Trabajo::factory()->create(['titulo' => 'El que ya estaba', 'orden' => 1, 'publicado' => true]);
 
-        Livewire::test('panel.trabajos')
-            ->call('abrirAlta')
-            ->set('fotoAntes', UploadedFile::fake()->image('antes.jpg'))
-            ->set('fotoDespues', UploadedFile::fake()->image('despues.jpg'))
-            ->set('material', Material::Ante->value)
-            ->set('titulo', 'El nuevo')
-            ->call('guardar')
-            ->assertHasNoErrors();
+        $this->darDeAlta('El nuevo');
 
-        $this->assertSame(['El que ya estaba', 'El nuevo'], $this->ordenActual());
+        $this->assertSame(['El nuevo', 'El que ya estaba'], $this->ordenActual());
+
+        $this->get(route('home'))->assertSeeInOrder(['El nuevo', 'El que ya estaba']);
+    }
+
+    public function test_subir_dos_pares_seguidos_deja_al_ultimo_de_primero(): void
+    {
+        $this->darDeAlta('El de la manana');
+        $this->darDeAlta('El de la tarde');
+
+        $this->assertSame(['El de la tarde', 'El de la manana'], $this->ordenActual());
+    }
+
+    public function test_un_trabajo_nuevo_no_desarma_el_orden_acomodado_a_mano(): void
+    {
+        Trabajo::factory()->create(['titulo' => 'Primero', 'orden' => 1]);
+        Trabajo::factory()->create(['titulo' => 'Segundo', 'orden' => 2]);
+        $tercero = Trabajo::factory()->create(['titulo' => 'Tercero', 'orden' => 3]);
+
+        Livewire::test('panel.trabajos')->call('subir', $tercero->id);
+
+        $this->assertSame(['Primero', 'Tercero', 'Segundo'], $this->ordenActual());
+
+        $this->darDeAlta('El nuevo');
+
+        $this->assertSame(['El nuevo', 'Primero', 'Tercero', 'Segundo'], $this->ordenActual());
     }
 
     public function test_el_formulario_no_ofrece_extras_como_servicio_aplicado(): void
@@ -284,6 +302,22 @@ class TrabajosDelPanelTest extends TestCase
             ->assertSee('Limpieza básica')
             ->assertDontSee('Entrega express')
             ->assertDontSee('Servicio dado de baja');
+    }
+
+    /**
+     * Sube un par por el formulario del Panel, con sus dos fotos.
+     */
+    private function darDeAlta(string $titulo): void
+    {
+        Livewire::test('panel.trabajos')
+            ->call('abrirAlta')
+            ->set('fotoAntes', UploadedFile::fake()->image('antes.jpg', 1200, 900))
+            ->set('fotoDespues', UploadedFile::fake()->image('despues.jpg', 1200, 900))
+            ->set('material', Material::Ante->value)
+            ->set('titulo', $titulo)
+            ->set('publicado', true)
+            ->call('guardar')
+            ->assertHasNoErrors();
     }
 
     /**

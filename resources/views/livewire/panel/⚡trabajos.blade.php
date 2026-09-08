@@ -67,7 +67,7 @@ new class extends Component
         $this->validate($this->reglas(), $this->mensajes());
 
         $trabajo = $this->enEdicion === null
-            ? new Trabajo(['orden' => Trabajo::siguienteOrden()])
+            ? new Trabajo
             : Trabajo::query()->findOrFail($this->enEdicion);
 
         if ($this->publicado) {
@@ -97,7 +97,12 @@ new class extends Component
         $trabajo->foto_antes = $nuevaAntes?->base ?? $anteriorAntes;
         $trabajo->foto_despues = $nuevaDespues?->base ?? $anteriorDespues;
 
-        $trabajo->save();
+        // Un par recién subido encabeza la lista; editar uno lo deja donde está.
+        if ($trabajo->exists) {
+            $trabajo->save();
+        } else {
+            $trabajo->guardarDePrimero();
+        }
 
         // La foto que se reemplaza se va del disco recién cuando la nueva ya
         // quedó guardada.
