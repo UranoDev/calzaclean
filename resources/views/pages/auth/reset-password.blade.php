@@ -29,7 +29,7 @@
                 required
                 autofocus
                 autocomplete="new-password"
-                placeholder="Al menos ocho caracteres"
+                placeholder="{{ \App\Support\ReglaDeContrasena::enPalabras() }}"
                 viewable
             />
 

@@ -28,7 +28,6 @@ class ResetUserPassword implements ResetsUserPasswords
         ], [
             'password.required' => 'La contraseña no puede quedar vacía.',
             'password.confirmed' => 'Las dos contraseñas no coinciden.',
-            'password.min' => 'La contraseña necesita al menos 8 caracteres.',
         ])->validate();
 
         $user->forceFill([

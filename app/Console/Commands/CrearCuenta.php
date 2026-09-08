@@ -20,7 +20,7 @@ class CrearCuenta extends Command
     protected $signature = 'calzaclean:crear-cuenta
         {--nombre= : Nombre de quien va a entrar al Panel}
         {--correo= : Correo con el que entra}
-        {--contrasena= : Contraseña, de ocho caracteres para arriba}';
+        {--contrasena= : Contraseña. Las reglas cambian entre desarrollo y producción}';
 
     protected $description = 'Crea una cuenta con acceso al Panel';
 
@@ -54,7 +54,6 @@ class CrearCuenta extends Command
             'email.unique' => "Ya hay una cuenta con el correo {$correo}.",
             'password.required' => 'La contraseña no puede quedar vacía.',
             'password.confirmed' => 'Las dos contraseñas no coinciden.',
-            'password.min' => 'La contraseña necesita al menos 8 caracteres.',
         ]);
 
         if ($validador->fails()) {
