@@ -40,6 +40,12 @@ class Trabajo extends Model
     use HasFactory;
 
     /**
+     * Cuántos pares trae la galería de una vez: los que se ven al abrir la
+     * portada y los que agrega cada toque de «Ver más resultados».
+     */
+    public const TANDA = 4;
+
+    /**
      * Borrar un Trabajo se lleva sus archivos, miniaturas incluidas: si no, el
      * disco acumula fotos que ya no se ven en ningún lado.
      */

@@ -201,10 +201,15 @@
 
                 <p class="text-menu text-white/70">© {{ now()->year }} CalzaClean</p>
 
-                {{-- La firma. El enlace cubre «en Tequisquiapan por Urano.dev»
-                     completo: partirlo dejaría dos destinos donde hay uno. --}}
-                <p class="text-menu text-white/70">
-                    Hecho con cariño
+                {{-- La firma. El corazón va con aria-hidden y sin texto
+                     alternativo: la palabra «cariño» ya está a su lado, y
+                     anunciarlo lo leería dos veces. --}}
+                <p class="flex flex-wrap items-center gap-x-1.5 text-menu text-white/70">
+                    Hecho con
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 shrink-0 fill-azul-claro">
+                        <path d="M12 20.7 4.3 13a5 5 0 0 1 7.1-7l.6.6.6-.6a5 5 0 1 1 7.1 7Z" />
+                    </svg>
+                    cariño
                     <a
                         href="https://urano.dev/casos-exito/calzaclean"
                         rel="noopener"

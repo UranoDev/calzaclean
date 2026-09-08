@@ -1,104 +1,168 @@
+@props(['todos' => false])
+
 @php
-    // La rejilla sirve miniaturas y trae seis Trabajos por página: la foto
-    // grande solo se descarga cuando alguien abre el comparador.
+    // La rejilla sirve miniaturas: la foto grande solo se descarga cuando
+    // alguien abre el comparador. La portada trae una tanda y pide las
+    // siguientes con el botón; `/resultados` trae todos los publicados.
+    $tanda = \App\Models\Trabajo::TANDA;
+
+    $publicados = \App\Models\Trabajo::query()->publicados()->count();
+
     $trabajos = \App\Models\Trabajo::query()
         ->publicados()
         ->ordenados()
         ->with('servicio')
-        ->simplePaginate(perPage: 6, pageName: 'trabajos')
-        ->withQueryString()
-        ->fragment('trabajos');
+        ->when(! $todos, fn ($consulta) => $consulta->take($tanda))
+        ->get();
+
+    $restantes = $publicados - $trabajos->count();
 @endphp
 
 <div {{ $attributes }}>
     @if ($trabajos->isEmpty())
         <p class="text-guia text-gris-pizarra">Todavía no hay trabajos en la galería.</p>
     @else
-        <ul class="grid gap-6 sm:grid-cols-2">
+        <ul class="grid gap-6 sm:grid-cols-2" data-galeria>
             @foreach ($trabajos as $trabajo)
-                <li>
-                    <details class="group overflow-hidden rounded-tarjeta border border-azul-claro-borde bg-white shadow-pieza">
-                        <summary class="flex cursor-pointer list-none items-center gap-4 p-4 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-azul-profundo [&::-webkit-details-marker]:hidden">
-                            <span class="block size-20 shrink-0 overflow-hidden rounded-pieza bg-azul-claro-tenue">
-                                <x-foto-trabajo
-                                    :foto="$trabajo->despues()"
-                                    :alt="$trabajo->descripcionDeFoto('Después')"
-                                />
-                            </span>
-
-                            <span class="min-w-0 flex-1">
-                                <span class="block font-titulo text-subtitulo font-semibold text-azul-profundo">{{ $trabajo->titulo_en_pantalla }}</span>
-
-                                <span class="mt-1 block text-menu text-gris-pizarra">
-                                    {{ $trabajo->material->etiqueta() }}@if ($trabajo->servicio) · {{ $trabajo->servicio->nombre }}@endif
-                                </span>
-
-                                <span class="mt-2 block font-titulo text-menu font-semibold text-azul-profundo group-open:hidden">Comparar antes y después</span>
-                                <span class="mt-2 hidden font-titulo text-menu font-semibold text-azul-profundo group-open:block">Cerrar</span>
-                            </span>
-
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-5 shrink-0 text-azul-profundo group-open:rotate-180">
-                                <path d="m6 9 6 6 6-6" />
-                            </svg>
-                        </summary>
-
-                        <div class="border-t border-azul-claro-borde p-4">
-                            <x-comparador-trabajo :trabajo="$trabajo" />
-
-                            {{-- La salida del par que se está mirando: el
-                                 mensaje que se precarga menciona su Material. --}}
-                            <div class="mt-4">
-                                <x-boton-whatsapp :sobre="$trabajo">Cotizar mis tenis</x-boton-whatsapp>
-                            </div>
-                        </div>
-                    </details>
-                </li>
+                <x-tarjeta-trabajo :trabajo="$trabajo" />
             @endforeach
         </ul>
 
-        @if ($trabajos->hasPages())
-            <nav aria-label="Páginas de trabajos" class="mt-8 flex flex-wrap items-center gap-3">
-                @if (! $trabajos->onFirstPage())
-                    <x-boton :href="$trabajos->previousPageUrl()" variante="secundario">Trabajos anteriores</x-boton>
-                @endif
-
-                @if ($trabajos->hasMorePages())
-                    <x-boton :href="$trabajos->nextPageUrl()" variante="secundario">Ver más trabajos</x-boton>
-                @endif
-            </nav>
+        @if ($restantes > 0)
+            <div class="mt-8">
+                {{-- Sale del servidor como enlace a `/resultados`, que es lo
+                     que se usa sin JavaScript. El script de abajo lo cambia
+                     por un botón que agrega la siguiente tanda en su lugar. --}}
+                <x-boton
+                    :href="route('resultados')"
+                    variante="secundario"
+                    data-ver-mas
+                    data-fuente="{{ route('resultados.mas') }}"
+                    data-mostrados="{{ $trabajos->count() }}"
+                    data-restantes="{{ $restantes }}"
+                >Ver más resultados (quedan {{ $restantes }})</x-boton>
+            </div>
         @endif
 
         <script>
-            // Sin este script quedan las dos fotos una junto a la otra, que es
-            // lo que trae el HTML. El deslizador nativo ya resuelve el dedo, el
-            // mouse, las flechas del teclado y el anuncio del lector.
-            document.querySelectorAll('[data-comparador]').forEach(function (comparador) {
-                var manija = comparador.querySelector('[data-manija]');
+            (function () {
+                // Sin esta parte quedan las dos fotos una junto a la otra, que
+                // es lo que trae el HTML. El deslizador nativo ya resuelve el
+                // dedo, el mouse, las flechas del teclado y el anuncio del
+                // lector.
+                function activarComparadores(raiz) {
+                    raiz.querySelectorAll('[data-comparador]:not([data-activo])').forEach(function (comparador) {
+                        var manija = comparador.querySelector('[data-manija]');
 
-                if (! manija) {
+                        if (! manija) {
+                            return;
+                        }
+
+                        comparador.setAttribute('data-activo', '');
+
+                        function mover() {
+                            comparador.style.setProperty('--posicion', manija.value);
+                        }
+
+                        manija.addEventListener('input', mover);
+
+                        manija.addEventListener('pointerdown', function () {
+                            comparador.setAttribute('data-arrastrando', '');
+                        });
+
+                        ['pointerup', 'pointercancel'].forEach(function (evento) {
+                            manija.addEventListener(evento, function () {
+                                comparador.removeAttribute('data-arrastrando');
+                            });
+                        });
+
+                        mover();
+                    });
+                }
+
+                activarComparadores(document);
+
+                var galeria = document.querySelector('[data-galeria]');
+                var enlace = document.querySelector('[data-ver-mas]');
+
+                if (! galeria || ! enlace) {
                     return;
                 }
 
-                comparador.setAttribute('data-activo', '');
+                // El enlace pasa a ser un botón: es lo único que se puede
+                // deshabilitar mientras carga la tanda.
+                var boton = document.createElement('button');
+                boton.type = 'button';
+                boton.className = enlace.className;
+                boton.textContent = enlace.textContent.trim();
 
-                function mover() {
-                    comparador.style.setProperty('--posicion', manija.value);
+                Object.keys(enlace.dataset).forEach(function (clave) {
+                    boton.dataset[clave] = enlace.dataset[clave];
+                });
+
+                enlace.replaceWith(boton);
+
+                var mostrados = Number(boton.dataset.mostrados);
+                var restantes = Number(boton.dataset.restantes);
+
+                function rotulo() {
+                    return 'Ver más resultados (quedan ' + restantes + ')';
                 }
 
-                manija.addEventListener('input', mover);
+                boton.addEventListener('click', function () {
+                    if (boton.disabled) {
+                        return;
+                    }
 
-                manija.addEventListener('pointerdown', function () {
-                    comparador.setAttribute('data-arrastrando', '');
-                });
+                    boton.disabled = true;
+                    boton.textContent = 'Cargando…';
 
-                ['pointerup', 'pointercancel'].forEach(function (evento) {
-                    manija.addEventListener(evento, function () {
-                        comparador.removeAttribute('data-arrastrando');
+                    fetch(boton.dataset.fuente + '?desde=' + mostrados, {
+                        headers: { 'Accept': 'text/html' },
+                    }).then(function (respuesta) {
+                        if (! respuesta.ok) {
+                            throw new Error('La tanda no llegó.');
+                        }
+
+                        return respuesta.text();
+                    }).then(function (html) {
+                        // Los pares entran al final: lo que el visitante está
+                        // mirando no se mueve de lugar.
+                        var hasta = galeria.children.length;
+                        galeria.insertAdjacentHTML('beforeend', html);
+
+                        var nuevos = Array.prototype.slice.call(galeria.children, hasta);
+
+                        activarComparadores(galeria);
+
+                        if (window.calzaclean && window.calzaclean.observarSinFlotante) {
+                            window.calzaclean.observarSinFlotante(galeria);
+                        }
+
+                        mostrados += nuevos.length;
+                        restantes -= nuevos.length;
+
+                        if (nuevos.length === 0 || restantes <= 0) {
+                            boton.remove();
+                        } else {
+                            boton.disabled = false;
+                            boton.textContent = rotulo();
+                        }
+
+                        // El foco se va al primero de los pares recién
+                        // agregados: quien navega con teclado sigue desde ahí
+                        // en vez de recorrer otra vez los de arriba.
+                        var primero = nuevos.length > 0 ? nuevos[0].querySelector('summary') : null;
+
+                        if (primero) {
+                            primero.focus();
+                        }
+                    }).catch(function () {
+                        boton.disabled = false;
+                        boton.textContent = rotulo();
                     });
                 });
-
-                mover();
-            });
+            })();
         </script>
     @endif
 </div>
