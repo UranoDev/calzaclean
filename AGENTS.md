@@ -4,7 +4,7 @@
 
 `CONTEXT.md` es el glosario: **Servicio**, **Extra**, **Material**, **Trabajo**,
 **Aviso**, **Negocio**, **Zona de recolección**, **Pregunta**, **Testimonio**,
-**Cliente**, **Dueña**, **Panel** y **Sitio**. Se lee antes de tocar código — ahí
+**Cliente**, **Dueño**, **Panel** y **Sitio**. Se lee antes de tocar código — ahí
 están las cinco trampas del dominio y la sección **Lo que sigue abierto**, que es lo
 que no se inventa.
 
@@ -41,5 +41,5 @@ antes de comitear. Ver `docs/agents/redaccion.md`.
 
 ### Quién lee el Panel
 
-Una sola persona, dueña de un taller, entrando casi siempre desde el celular con el
+Una sola persona, dueño de un taller, entrando casi siempre desde el celular con el
 par recién terminado en la mano. El Panel se prueba angosto antes que ancho.

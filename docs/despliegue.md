@@ -197,7 +197,7 @@ Estas acciones corren en **cada** despliegue. Lo que no va aquí: `db:seed`,
 
 `.env`, `storage/app/public` —donde viven las fotos de los Trabajos— y la base de
 datos. Están fuera del repo, así que sobreviven a cada despliegue. Es la razón por la
-que el contenido que cargue la Dueña no se pierde al actualizar el sitio.
+que el contenido que cargue el Dueño no se pierde al actualizar el sitio.
 
 ### 3.5 Si no hay más remedio que FTP
 
@@ -320,7 +320,7 @@ Sin opciones pregunta los datos por consola. Con `--nombre`, `--correo` y
 php artisan calzaclean:cuentas
 ```
 
-Son dos: la Dueña y quien mantiene el sitio. **Las contraseñas temporales que se usaron
+Son dos: el Dueño y quien mantiene el sitio. **Las contraseñas temporales que se usaron
 en desarrollo no se reutilizan aquí.**
 
 ## 8. El enlace de almacenamiento
@@ -399,6 +399,6 @@ tampoco hace falta.
 - **Colas y tareas programadas.** El proyecto no tiene ninguna, así que no hace falta
   ni un worker ni una entrada de cron.
 - **El contenido real.** Las fotos de los Trabajos, las Preguntas y los Testimonios los
-  carga la Dueña desde el Panel. El sitio publicado sin ellos oculta esas secciones en
+  cargal Dueño desde el Panel. El sitio publicado sin ellos oculta esas secciones en
   vez de mostrarlas vacías, así que no rompe nada — pero le falta justo lo que más
   vende.

@@ -3,7 +3,7 @@
 namespace App\Support;
 
 /**
- * Traduce los horarios del Negocio —texto libre que la Dueña escribe en el
+ * Traduce los horarios del Negocio —texto libre que el Dueño escribe en el
  * Panel— a la forma que leen los buscadores: `Mo-Fr 10:00-19:00`.
  *
  * Un renglón que no se entiende se descarta. Los datos estructurados prefieren

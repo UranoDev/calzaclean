@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use SplFileInfo;
 
 /**
- * Deja lista para el Sitio una foto que llegó del celular de la Dueña: entre 3
+ * Deja lista para el Sitio una foto que llegó del celular del Dueño: entre 3
  * y 8 MB, en HEIC o JPEG, y a veces acostada.
  *
  * De cada archivo que entra salen cuatro: la grande y la miniatura, cada una en

@@ -14,7 +14,7 @@ se inventa: se agrega aquí primero.
 
 Una página pública que **termina en WhatsApp**. No cobra, no agenda y no cotiza: su
 trabajo es enseñar resultados, decir cuánto cuesta y abrir la conversación. Detrás
-tiene un **Panel** de cuatro pantallas para que la Dueña mantenga al día lo que
+tiene un **Panel** de cuatro pantallas para que el Dueño mantenga al día lo que
 cambia seguido.
 
 Lo que se decidió a propósito: **editable es lo que cambia seguido**. Los textos que
@@ -40,8 +40,8 @@ lleva su técnica y su producto.
 
 **Trabajo** — un par ya limpiado que se publica en la galería, con su foto de
 **antes** y su foto de **después**, su Material y el Servicio que se le aplicó. Es la
-pieza de contenido que la Dueña sube cada semana y la sección que más vende. La lista
-lleva un orden que la Dueña acomoda con las flechas del Panel, y **el primero de esa
+pieza de contenido que el Dueño sube cada semana y la sección que más vende. La lista
+lleva un orden que el Dueño acomoda con las flechas del Panel, y **el primero de esa
 lista que esté publicado es el que enseña la portada**: uno solo, y elegido a mano.
 Sin ninguno publicado la portada usa su imagen de respaldo. Un Trabajo nuevo entra en
 primera posición, así que por omisión la portada muestra el último que se subió.
@@ -57,7 +57,7 @@ muchos.
 **Redes** — Instagram, Facebook, X y TikTok. Son cuatro campos del Negocio, cada uno
 con la URL completa. **Una red sin URL no se dibuja**: el pie del Sitio solo muestra
 las que están cargadas, nunca un icono muerto. Hoy hay Instagram y Facebook; X y
-TikTok todavía no existen y así se quedan hasta que la Dueña los cargue.
+TikTok todavía no existen y así se quedan hasta que el Dueño los cargue.
 
 **Zona de recolección** — un área donde se recoge y se entrega a domicilio, con su
 costo. Hoy hay dos: **Centro**, sin costo, y **Fuera del centro**, **+$50**. Una zona
@@ -73,18 +73,18 @@ respuesta, en texto plano.
 **Testimonio** — la reseña de un Cliente publicada en el sitio: nombre, texto y,
 cuando existe, el Trabajo al que corresponde.
 
-**Tiempo de entrega** — **72 horas**. Confirmado por la Dueña el 6 de septiembre de
+**Tiempo de entrega** — **72 horas**. Confirmado por el Dueño el 6 de septiembre de
 2026: se puede escribir como promesa en presente. La **entrega express** es el Extra
 que lo baja a 24 horas por +$100.
 
 **Cliente** — quien lleva sus tenis. **No tiene cuenta.** El sitio no tiene login
 para clientes ni los guarda en base de datos.
 
-**Dueña** — quien atiende el taller y edita el contenido. Es el público para el que
+**Dueño** — quien atiende el taller y edita el contenido. Es el público para el que
 se diseña el Panel.
 
 **Cuenta del Panel** — un acceso al Panel. **No hay registro público**: las cuentas se
-crean con un comando de artisan. Hoy hay dos, la Dueña y quien mantiene el sitio, y
+crean con un comando de artisan. Hoy hay dos, el Dueño y quien mantiene el sitio, y
 **las dos tienen el mismo acceso**: el Panel no distingue permisos ni roles. Si algún
 día hiciera falta distinguirlos, eso es una decisión nueva, no algo que se cuele en
 una tarea.
@@ -111,7 +111,7 @@ va agregando de a cuatro, y sin JavaScript ese botón es el enlace a esa página
    borrar un Servicio no puede borrar Trabajos.
 3. **El sitio no cobra ni agenda.** No hay carrito, no hay calendario, no hay estado
    de pedido. Todo camino termina en un enlace de WhatsApp con mensaje precargado.
-4. **La Dueña no es un usuario genérico.** No hay pantalla de registro. Si el starter
+4. **El Dueño no es un usuario genérico.** No hay pantalla de registro. Si el starter
    kit la trae, se quita.
 5. **El Aviso es temporal por definición.** El sitio tiene que verse bien sin ninguno,
    que es como va a estar la mayor parte del año.
@@ -174,7 +174,7 @@ en el pie. La línea comercial del encabezado es **«Cada material, su técnica.
 
 ### El logo
 
-`public/img/logo-original.jpeg` es el archivo que entregó la Dueña: el lockup completo
+`public/img/logo-original.jpeg` es el archivo que entregó el Dueño: el lockup completo
 —logotipo, eslogan y los dos tenis— sobre el azul del logo. De ahí sale
 `public/img/logo-calzaclean.png`, el logotipo recortado con fondo transparente, que es
 el que usa `<x-logo-calzaclean>` en el encabezado y en el pie. El logotipo trae la
@@ -212,7 +212,7 @@ corren a mano cuando cambia el logo, y cuyo resultado se comitea:
   costo, Fuera del centro +$50, y **no hay mínimo de pares** — se recoge aunque sea
   uno solo. Lo construyó CALZ-20, que renombró la entidad a Zona de recolección.
 - **Zona horaria: `America/Mexico_City`.** El taller está en un solo lugar y las fechas
-  las lee la Dueña, no un sistema. Con la zona en UTC, el Panel mostraba el día
+  las lee el Dueño, no un sistema. Con la zona en UTC, el Panel mostraba el día
   siguiente a partir de las seis de la tarde.
 - **El seeder no crea cuentas.** Las Cuentas del Panel se crean con
   `calzaclean:crear-cuenta`. Sembrar una con correo y contraseña conocidos deja una

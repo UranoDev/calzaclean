@@ -16,7 +16,7 @@ final class DatosEstructurados
 {
     /**
      * La localidad del taller. Es el mismo dato que el pie del Sitio dice con
-     * palabras, no un dato que la Dueña cargue.
+     * palabras, no un dato que el Dueño cargue.
      */
     private const LOCALIDAD = 'San Juan del Río';
 

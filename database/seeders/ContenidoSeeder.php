@@ -80,7 +80,7 @@ class ContenidoSeeder extends Seeder
 
         // La semilla de contacto vive en config/sitio.php; el resto, acá
         // arriba. En los dos casos solo se llena el campo que esté vacío: lo
-        // que la Dueña haya guardado desde el Panel se queda como está.
+        // que el Dueño haya guardado desde el Panel se queda como está.
         $semilla = self::NEGOCIO + [
             'whatsapp' => config('sitio.whatsapp'),
             ...config('sitio.redes', []),

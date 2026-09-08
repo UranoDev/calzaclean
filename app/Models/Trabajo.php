@@ -124,7 +124,7 @@ class Trabajo extends Model
 
     /**
      * Guarda un Trabajo nuevo en la primera posición de la lista: los demás
-     * bajan un lugar y conservan el orden que la Dueña les acomodó.
+     * bajan un lugar y conservan el orden que el Dueño les acomodó.
      */
     public function guardarDePrimero(): void
     {
@@ -190,7 +190,7 @@ class Trabajo extends Model
 
     /**
      * El par que enseña la portada: el primero de la lista que esté publicado.
-     * Es el mismo orden que la Dueña acomoda con las flechas del Panel, así
+     * Es el mismo orden que el Dueño acomoda con las flechas del Panel, así
      * que subir un Trabajo al primer lugar lo pone en la portada. Sin ninguno
      * publicado devuelve null y la portada usa su imagen de respaldo.
      */

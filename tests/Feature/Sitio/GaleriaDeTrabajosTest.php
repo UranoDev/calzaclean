@@ -98,7 +98,7 @@ class GaleriaDeTrabajosTest extends TestCase
     }
 
     /**
-     * Seis pares publicados, en el orden que la Dueña acomodó con las flechas.
+     * Seis pares publicados, en el orden que el Dueño acomodó con las flechas.
      *
      * @return Collection<int, Trabajo>
      */
@@ -184,7 +184,7 @@ class GaleriaDeTrabajosTest extends TestCase
     {
         $pares = $this->seisPares();
 
-        // La Dueña sube el sexto al primer lugar: la portada lo enseña y la
+        // El Dueño sube el sexto al primer lugar: la portada lo enseña y la
         // tanda arranca desde donde quedó la rejilla, ya reacomodada.
         $pares->last()->update(['orden' => 0]);
 

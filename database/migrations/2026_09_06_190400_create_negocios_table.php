@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         // Singleton: un solo renglón con los datos del taller. Todo campo nace
-        // vacío para que el renglón exista antes de que la Dueña cargue nada y
+        // vacío para que el renglón exista antes de que el Dueño cargue nada y
         // el Sitio se dibuje igual. Cada red guarda la URL completa.
         Schema::create('negocios', function (Blueprint $table) {
             $table->id();

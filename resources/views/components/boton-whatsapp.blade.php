@@ -9,7 +9,7 @@
 
 @php
     // El enlace lo arma `EnlaceWhatsApp` a partir del WhatsApp del Negocio, que
-    // la Dueña edita en Ajustes › Contacto. Sin número cargado no hay
+    // el Dueño edita en Ajustes › Contacto. Sin número cargado no hay
     // conversación a dónde mandar a nadie y el botón no se dibuja.
     //
     // `origen` es el punto de salida y decide el mensaje precargado. Cuando el

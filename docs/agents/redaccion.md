@@ -1,7 +1,7 @@
 # Redacción de la interfaz
 
 Hay dos públicos y ninguno construyó el sistema: quien busca a quién dejarle sus
-tenis, y la Dueña del taller editando desde el celular. Estas tres reglas son las que
+tenis, y el Dueño del taller editando desde el celular. Estas tres reglas son las que
 más veces se rompen.
 
 ## 1. Sin aforismos
@@ -38,4 +38,4 @@ tests y llega al cliente.
 
 Dos cosas que hay que releer siempre porque son dinero: los **precios** —los Extras
 se escriben con `+` por delante, siempre— y el **tiempo de entrega**, que mientras no
-lo confirme la Dueña no se promete en presente.
+lo confirme el Dueño no se promete en presente.

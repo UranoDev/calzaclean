@@ -1,6 +1,6 @@
 @php
     // El par que enseña la portada es el primero de la lista de Trabajos que
-    // esté publicado, la misma lista que la Dueña acomoda con las flechas del
+    // esté publicado, la misma lista que el Dueño acomoda con las flechas del
     // Panel. Sin ninguno publicado se dibuja la imagen de respaldo, para que la
     // portada no arranque con un hueco.
     $trabajo = \App\Models\Trabajo::deLaPortada();
