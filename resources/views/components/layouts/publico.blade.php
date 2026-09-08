@@ -200,6 +200,22 @@
                 <x-boton-whatsapp foco="claro" />
 
                 <p class="text-menu text-white/70">© {{ now()->year }} CalzaClean</p>
+
+                {{-- El corazón es decoración: un lector de pantalla lee «Hecho
+                     con cariño en Tequisquiapan», que es la frase completa. --}}
+                <p class="flex items-center gap-1.5 text-menu text-white/70">
+                    Hecho con
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 shrink-0 fill-azul-claro">
+                        <path d="M12 20.7 4.3 13a5 5 0 0 1 7.1-7l.6.6.6-.6a5 5 0 1 1 7.1 7Z" />
+                    </svg>
+                    <span class="sr-only">cariño</span>
+                    en
+                    <a
+                        href="https://urano.dev/casos-exito/calzaclean"
+                        rel="noopener"
+                        class="rounded-suave underline underline-offset-4 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                    >Tequisquiapan</a>
+                </p>
             </div>
         </x-contenedor>
     </footer>
