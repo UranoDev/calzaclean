@@ -118,7 +118,7 @@ class BusquedaLocalTest extends TestCase
 
     public function test_cada_pagina_tiene_su_titulo_y_su_descripcion(): void
     {
-        $paginas = ['home', 'precios', 'cuidado-de-tenis', 'aviso-de-privacidad', 'terminos-y-condiciones'];
+        $paginas = ['home', 'precios', 'resultados', 'cuidado-de-tenis', 'aviso-de-privacidad', 'terminos-y-condiciones'];
 
         $titulos = [];
         $descripciones = [];
@@ -151,6 +151,7 @@ class BusquedaLocalTest extends TestCase
         $respuesta->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
         $respuesta->assertSee('<loc>https://calzaclean.com/</loc>', false);
         $respuesta->assertSee('<loc>https://calzaclean.com/precios</loc>', false);
+        $respuesta->assertSee('<loc>https://calzaclean.com/resultados</loc>', false);
         $respuesta->assertSee('<loc>https://calzaclean.com/cuidado-de-tenis</loc>', false);
         $respuesta->assertSee('<loc>https://calzaclean.com/aviso-de-privacidad</loc>', false);
         $respuesta->assertSee('<loc>https://calzaclean.com/terminos-y-condiciones</loc>', false);

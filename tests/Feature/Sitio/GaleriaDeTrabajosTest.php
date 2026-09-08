@@ -6,6 +6,7 @@ use App\Enums\Material;
 use App\Fotos\Variante;
 use App\Models\Servicio;
 use App\Models\Trabajo;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -96,25 +97,104 @@ class GaleriaDeTrabajosTest extends TestCase
         $response->assertSee('aria-label="Mover para comparar el antes y el después de Air Force 1 blancos"', false);
     }
 
-    public function test_la_rejilla_pagina_en_vez_de_traer_todos_los_trabajos(): void
+    /**
+     * Seis pares publicados, en el orden que la Dueña acomodó con las flechas.
+     *
+     * @return Collection<int, Trabajo>
+     */
+    private function seisPares(): Collection
     {
-        Trabajo::factory()->count(8)->sequence(fn ($sequence) => [
-            'titulo' => 'Par número '.($sequence->index + 1),
-            'orden' => $sequence->index + 1,
+        return Trabajo::factory()->count(6)->sequence(fn ($secuencia) => [
+            'titulo' => 'Par número '.($secuencia->index + 1),
+            'orden' => $secuencia->index + 1,
+        ])->create();
+    }
+
+    public function test_la_portada_trae_cuatro_pares_y_el_boton_dice_cuantos_quedan(): void
+    {
+        $this->seisPares();
+
+        $response = $this->get(route('home'));
+
+        $response->assertSee('Par número 4', false);
+        $response->assertDontSee('Par número 5', false);
+        $response->assertDontSee('Par número 6', false);
+        $response->assertSee('Ver más resultados (quedan 2)', false);
+    }
+
+    public function test_con_cuatro_o_menos_publicados_el_boton_no_se_dibuja(): void
+    {
+        Trabajo::factory()->count(4)->create();
+
+        $this->get(route('home'))->assertDontSee('Ver más resultados', false);
+    }
+
+    public function test_sin_javascript_el_boton_es_un_enlace_a_la_pagina_de_resultados(): void
+    {
+        $this->seisPares();
+
+        $response = $this->get(route('home'));
+
+        $response->assertSee('href="'.route('resultados').'"', false);
+
+        $this->get(route('resultados'))
+            ->assertOk()
+            ->assertSee('Par número 1', false)
+            ->assertSee('Par número 6', false)
+            ->assertDontSee('Ver más resultados', false);
+    }
+
+    public function test_la_siguiente_tanda_sigue_donde_quedo_la_rejilla(): void
+    {
+        $this->seisPares();
+
+        $tanda = $this->get(route('resultados.mas', ['desde' => 4]));
+
+        $tanda->assertOk();
+        $tanda->assertSee('Par número 5', false);
+        $tanda->assertSee('Par número 6', false);
+        $tanda->assertDontSee('Par número 4', false);
+
+        // Es la pieza suelta que se agrega a la rejilla, no una página.
+        $tanda->assertDontSee('<title>', false);
+    }
+
+    public function test_los_despublicados_no_cuentan_para_el_total_ni_llegan_a_la_tanda(): void
+    {
+        Trabajo::factory()->count(4)->sequence(fn ($secuencia) => [
+            'titulo' => 'Par número '.($secuencia->index + 1),
+            'orden' => $secuencia->index + 1,
         ])->create();
 
-        $primera = $this->get(route('home'));
+        Trabajo::factory()->borrador()->count(3)->sequence(fn ($secuencia) => [
+            'titulo' => 'Par a medio terminar '.($secuencia->index + 1),
+            'orden' => $secuencia->index + 5,
+        ])->create();
 
-        $primera->assertSee('Par número 6', false);
-        $primera->assertDontSee('Par número 7', false);
-        $primera->assertSee('Ver más trabajos', false);
+        $this->get(route('home'))->assertDontSee('Ver más resultados', false);
 
-        $segunda = $this->get(route('home', ['trabajos' => 2]));
+        $this->get(route('resultados.mas', ['desde' => 4]))
+            ->assertOk()
+            ->assertDontSee('Par a medio terminar', false);
 
-        $segunda->assertSee('Par número 7', false);
-        $segunda->assertSee('Par número 8', false);
-        $segunda->assertDontSee('Par número 6', false);
-        $segunda->assertSee('Trabajos anteriores', false);
+        $this->get(route('resultados'))->assertDontSee('Par a medio terminar', false);
+    }
+
+    public function test_la_tanda_respeta_el_orden_de_las_flechas_del_panel(): void
+    {
+        $pares = $this->seisPares();
+
+        // La Dueña sube el sexto al primer lugar: la portada lo enseña y la
+        // tanda arranca desde donde quedó la rejilla, ya reacomodada.
+        $pares->last()->update(['orden' => 0]);
+
+        $this->get(route('home'))->assertSee('Par número 6', false);
+
+        $tanda = $this->get(route('resultados.mas', ['desde' => 4]));
+
+        $tanda->assertSee('Par número 4', false);
+        $tanda->assertSee('Par número 5', false);
+        $tanda->assertDontSee('Par número 6', false);
     }
 
     public function test_las_fotos_de_la_rejilla_no_compiten_con_la_portada_por_la_descarga(): void

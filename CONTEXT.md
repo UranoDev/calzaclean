@@ -94,8 +94,10 @@ una tarea.
 **Contacto** (WhatsApp y Redes), **Negocio** (horarios, dirección y zonas de
 recolección) y **Aviso**.
 
-**Sitio** — la parte pública. Una sola página con anclas, más `/precios` y
-`/cuidado-de-tenis` como páginas propias.
+**Sitio** — la parte pública. Una sola página con anclas, más `/precios`,
+`/resultados` y `/cuidado-de-tenis` como páginas propias. `/resultados` es la
+galería completa: la portada enseña cuatro pares y el botón «Ver más resultados»
+va agregando de a cuatro, y sin JavaScript ese botón es el enlace a esa página.
 
 ---
 

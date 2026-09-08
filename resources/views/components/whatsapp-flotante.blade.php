@@ -28,8 +28,10 @@
             flotante.hidden = window.scrollY < 400 || tapado.size > 0;
         }
 
+        var observador = null;
+
         if ('IntersectionObserver' in window) {
-            var observador = new IntersectionObserver(function (entradas) {
+            observador = new IntersectionObserver(function (entradas) {
                 entradas.forEach(function (entrada) {
                     if (entrada.isIntersecting) {
                         tapado.add(entrada.target);
@@ -40,11 +42,24 @@
 
                 actualizar();
             });
+        }
 
-            document.querySelectorAll('[data-sin-flotante]').forEach(function (estorbo) {
+        // Los comparadores que llegan después —la siguiente tanda de la
+        // galería— también tapan la esquina, así que la galería avisa.
+        function observar(raiz) {
+            if (! observador) {
+                return;
+            }
+
+            raiz.querySelectorAll('[data-sin-flotante]').forEach(function (estorbo) {
                 observador.observe(estorbo);
             });
         }
+
+        observar(document);
+
+        window.calzaclean = window.calzaclean || {};
+        window.calzaclean.observarSinFlotante = observar;
 
         window.addEventListener('scroll', actualizar, { passive: true });
         actualizar();

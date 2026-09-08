@@ -17,7 +17,7 @@ class MapaDelSitioController extends Controller
      *
      * @var list<string>
      */
-    private const PAGINAS = ['home', 'precios', 'cuidado-de-tenis', 'aviso-de-privacidad', 'terminos-y-condiciones'];
+    private const PAGINAS = ['home', 'precios', 'resultados', 'cuidado-de-tenis', 'aviso-de-privacidad', 'terminos-y-condiciones'];
 
     public function __invoke(): Response
     {

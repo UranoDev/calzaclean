@@ -25,8 +25,10 @@
         ['ancla' => '#contacto', 'texto' => 'Contacto', 'se_muestra' => $negocio->contacto_visible],
     ], fn (array $enlace): bool => $enlace['se_muestra'] ?? true));
 
-    // Las dos páginas propias del Sitio, para llegar a ellas desde cualquier
-    // otra.
+    // Las páginas propias que lista el pie, para llegar a ellas desde
+    // cualquier otra. `/resultados` no entra: el encabezado ya lleva
+    // «Resultados» a la sección de la portada y dos entradas con el mismo
+    // nombre mandan a lugares distintos.
     $paginas = [
         ['href' => route('precios'), 'texto' => 'Precios'],
         ['href' => route('cuidado-de-tenis'), 'texto' => 'Cuidado de tenis'],
@@ -201,15 +203,15 @@
 
                 <p class="text-menu text-white/70">© {{ now()->year }} CalzaClean</p>
 
-                {{-- La firma. El corazón va con aria-hidden y sin texto
-                     alternativo: la palabra «cariño» ya está a su lado, y
-                     anunciarlo lo leería dos veces. --}}
+                {{-- La firma. El corazón es decoración: lleva aria-hidden y a
+                     su lado va «cariño» oculto, para que un lector de pantalla
+                     lea la frase completa en vez de saltarse el símbolo. --}}
                 <p class="flex flex-wrap items-center gap-x-1.5 text-menu text-white/70">
                     Hecho con
                     <svg viewBox="0 0 24 24" aria-hidden="true" class="size-4 shrink-0 fill-azul-claro">
                         <path d="M12 20.7 4.3 13a5 5 0 0 1 7.1-7l.6.6.6-.6a5 5 0 1 1 7.1 7Z" />
                     </svg>
-                    cariño
+                    <span class="sr-only">cariño</span>
                     <a
                         href="https://urano.dev/casos-exito/calzaclean"
                         rel="noopener"

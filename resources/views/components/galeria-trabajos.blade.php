@@ -28,29 +28,13 @@
             @endforeach
         </ul>
 
-        @if ($restantes > 0)
-            <div class="mt-8">
-                {{-- Sale del servidor como enlace a `/resultados`, que es lo
-                     que se usa sin JavaScript. El script de abajo lo cambia
-                     por un botón que agrega la siguiente tanda en su lugar. --}}
-                <x-boton
-                    :href="route('resultados')"
-                    variante="secundario"
-                    data-ver-mas
-                    data-fuente="{{ route('resultados.mas') }}"
-                    data-mostrados="{{ $trabajos->count() }}"
-                    data-restantes="{{ $restantes }}"
-                >Ver más resultados (quedan {{ $restantes }})</x-boton>
-            </div>
-        @endif
-
         <script>
             (function () {
                 // Sin esta parte quedan las dos fotos una junto a la otra, que
                 // es lo que trae el HTML. El deslizador nativo ya resuelve el
                 // dedo, el mouse, las flechas del teclado y el anuncio del
                 // lector.
-                function activarComparadores(raiz) {
+                function activar(raiz) {
                     raiz.querySelectorAll('[data-comparador]:not([data-activo])').forEach(function (comparador) {
                         var manija = comparador.querySelector('[data-manija]');
 
@@ -80,89 +64,119 @@
                     });
                 }
 
-                activarComparadores(document);
+                activar(document);
 
-                var galeria = document.querySelector('[data-galeria]');
-                var enlace = document.querySelector('[data-ver-mas]');
+                // Los pares que llegan después, cuando se pide la siguiente
+                // tanda, necesitan el mismo trato.
+                window.calzaclean = window.calzaclean || {};
+                window.calzaclean.activarComparadores = activar;
+            })();
+        </script>
 
-                if (! galeria || ! enlace) {
-                    return;
-                }
+        @if ($restantes > 0)
+            <div class="mt-8">
+                {{-- Sale del servidor como enlace a `/resultados`, que es lo
+                     que se usa sin JavaScript. El script de abajo lo cambia
+                     por un botón que agrega la siguiente tanda en su lugar. --}}
+                <x-boton
+                    :href="route('resultados')"
+                    variante="secundario"
+                    data-ver-mas
+                    data-fuente="{{ route('resultados.mas') }}"
+                    data-mostrados="{{ $trabajos->count() }}"
+                    data-restantes="{{ $restantes }}"
+                >Ver más resultados (quedan {{ $restantes }})</x-boton>
+            </div>
 
-                // El enlace pasa a ser un botón: es lo único que se puede
-                // deshabilitar mientras carga la tanda.
-                var boton = document.createElement('button');
-                boton.type = 'button';
-                boton.className = enlace.className;
-                boton.textContent = enlace.textContent.trim();
+            <script>
+                (function () {
+                    var galeria = document.querySelector('[data-galeria]');
+                    var enlace = document.querySelector('[data-ver-mas]');
 
-                Object.keys(enlace.dataset).forEach(function (clave) {
-                    boton.dataset[clave] = enlace.dataset[clave];
-                });
-
-                enlace.replaceWith(boton);
-
-                var mostrados = Number(boton.dataset.mostrados);
-                var restantes = Number(boton.dataset.restantes);
-
-                function rotulo() {
-                    return 'Ver más resultados (quedan ' + restantes + ')';
-                }
-
-                boton.addEventListener('click', function () {
-                    if (boton.disabled) {
+                    if (! galeria || ! enlace) {
                         return;
                     }
 
-                    boton.disabled = true;
-                    boton.textContent = 'Cargando…';
+                    // El enlace pasa a ser un botón: es lo único que se puede
+                    // deshabilitar mientras carga la tanda.
+                    var boton = document.createElement('button');
+                    boton.type = 'button';
+                    boton.className = enlace.className;
+                    boton.textContent = enlace.textContent.trim();
 
-                    fetch(boton.dataset.fuente + '?desde=' + mostrados, {
-                        headers: { 'Accept': 'text/html' },
-                    }).then(function (respuesta) {
-                        if (! respuesta.ok) {
-                            throw new Error('La tanda no llegó.');
+                    Object.keys(enlace.dataset).forEach(function (clave) {
+                        boton.dataset[clave] = enlace.dataset[clave];
+                    });
+
+                    enlace.replaceWith(boton);
+
+                    var mostrados = Number(boton.dataset.mostrados);
+                    var restantes = Number(boton.dataset.restantes);
+
+                    function rotulo() {
+                        return 'Ver más resultados (quedan ' + restantes + ')';
+                    }
+
+                    boton.addEventListener('click', function () {
+                        if (boton.disabled) {
+                            return;
                         }
 
-                        return respuesta.text();
-                    }).then(function (html) {
-                        // Los pares entran al final: lo que el visitante está
-                        // mirando no se mueve de lugar.
-                        var hasta = galeria.children.length;
-                        galeria.insertAdjacentHTML('beforeend', html);
+                        boton.disabled = true;
+                        boton.textContent = 'Cargando…';
 
-                        var nuevos = Array.prototype.slice.call(galeria.children, hasta);
+                        fetch(boton.dataset.fuente + '?desde=' + mostrados, {
+                            headers: { 'Accept': 'text/html' },
+                        }).then(function (respuesta) {
+                            if (! respuesta.ok) {
+                                throw new Error('La tanda no llegó.');
+                            }
 
-                        activarComparadores(galeria);
+                            return respuesta.text();
+                        }).then(function (html) {
+                            // Los pares entran al final: lo que el visitante
+                            // está mirando no se mueve de lugar.
+                            var hasta = galeria.children.length;
+                            galeria.insertAdjacentHTML('beforeend', html);
 
-                        if (window.calzaclean && window.calzaclean.observarSinFlotante) {
-                            window.calzaclean.observarSinFlotante(galeria);
-                        }
+                            var nuevos = Array.prototype.slice.call(galeria.children, hasta);
 
-                        mostrados += nuevos.length;
-                        restantes -= nuevos.length;
+                            if (window.calzaclean) {
+                                if (window.calzaclean.activarComparadores) {
+                                    window.calzaclean.activarComparadores(galeria);
+                                }
 
-                        if (nuevos.length === 0 || restantes <= 0) {
-                            boton.remove();
-                        } else {
+                                if (window.calzaclean.observarSinFlotante) {
+                                    window.calzaclean.observarSinFlotante(galeria);
+                                }
+                            }
+
+                            mostrados += nuevos.length;
+                            restantes -= nuevos.length;
+
+                            if (nuevos.length === 0 || restantes <= 0) {
+                                boton.remove();
+                            } else {
+                                boton.disabled = false;
+                                boton.textContent = rotulo();
+                            }
+
+                            // El foco se va al primero de los pares recién
+                            // agregados: quien navega con teclado sigue desde
+                            // ahí en vez de recorrer otra vez los de arriba.
+                            var primero = nuevos.length > 0 ? nuevos[0].querySelector('summary') : null;
+
+                            if (primero) {
+                                primero.focus();
+                            }
+                        }).catch(function () {
                             boton.disabled = false;
                             boton.textContent = rotulo();
-                        }
-
-                        // El foco se va al primero de los pares recién
-                        // agregados: quien navega con teclado sigue desde ahí
-                        // en vez de recorrer otra vez los de arriba.
-                        var primero = nuevos.length > 0 ? nuevos[0].querySelector('summary') : null;
-
-                        if (primero) {
-                            primero.focus();
-                        }
-                    }).catch(function () {
-                        boton.disabled = false;
-                        boton.textContent = rotulo();
+                        });
                     });
-                });
-            })();
-        </script>
+                })();
+            </script>
+        @endif
+
     @endif
 </div>

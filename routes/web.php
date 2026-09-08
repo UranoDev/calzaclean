@@ -1,12 +1,18 @@
 <?php
 
 use App\Http\Controllers\MapaDelSitioController;
+use App\Http\Controllers\MasResultadosController;
 use App\Http\Controllers\RobotsController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'sitio.inicio')->name('home');
 Route::view('precios', 'sitio.precios')->name('precios');
+Route::view('resultados', 'sitio.resultados')->name('resultados');
 Route::view('cuidado-de-tenis', 'sitio.cuidado-de-tenis')->name('cuidado-de-tenis');
+
+// La siguiente tanda de la galería, que pide el botón «Ver más resultados».
+// No es una página: son los pares sueltos que se agregan a la rejilla.
+Route::get('resultados/mas', MasResultadosController::class)->name('resultados.mas');
 
 // Los dos textos legales. Viven en Blade y no en el Panel: cambian casi nunca
 // y no se editan por accidente.
