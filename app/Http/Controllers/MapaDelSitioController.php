@@ -6,8 +6,8 @@ use App\Support\EnlaceCanonico;
 use Illuminate\Http\Response;
 
 /**
- * El mapa que los buscadores leen para saber qué páginas tiene el Sitio. Las
- * tres direcciones salen de sus rutas con nombre, sobre el dominio canónico.
+ * El mapa que los buscadores leen para saber qué páginas tiene el Sitio. Cada
+ * dirección sale de su ruta con nombre, sobre el dominio canónico.
  */
 class MapaDelSitioController extends Controller
 {
@@ -17,7 +17,7 @@ class MapaDelSitioController extends Controller
      *
      * @var list<string>
      */
-    private const PAGINAS = ['home', 'precios', 'cuidado-de-tenis'];
+    private const PAGINAS = ['home', 'precios', 'cuidado-de-tenis', 'aviso-de-privacidad', 'terminos-y-condiciones'];
 
     public function __invoke(): Response
     {

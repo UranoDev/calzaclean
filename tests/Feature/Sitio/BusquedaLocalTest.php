@@ -118,7 +118,7 @@ class BusquedaLocalTest extends TestCase
 
     public function test_cada_pagina_tiene_su_titulo_y_su_descripcion(): void
     {
-        $paginas = ['home', 'precios', 'cuidado-de-tenis'];
+        $paginas = ['home', 'precios', 'cuidado-de-tenis', 'aviso-de-privacidad', 'terminos-y-condiciones'];
 
         $titulos = [];
         $descripciones = [];
@@ -143,7 +143,7 @@ class BusquedaLocalTest extends TestCase
         $this->assertSame([1200, 630], array_slice((array) getimagesize(public_path('img/vista-previa.png')), 0, 2));
     }
 
-    public function test_el_mapa_del_sitio_lista_las_tres_paginas_publicas(): void
+    public function test_el_mapa_del_sitio_lista_las_paginas_publicas(): void
     {
         $respuesta = $this->get('/sitemap.xml');
 
@@ -152,6 +152,8 @@ class BusquedaLocalTest extends TestCase
         $respuesta->assertSee('<loc>https://calzaclean.com/</loc>', false);
         $respuesta->assertSee('<loc>https://calzaclean.com/precios</loc>', false);
         $respuesta->assertSee('<loc>https://calzaclean.com/cuidado-de-tenis</loc>', false);
+        $respuesta->assertSee('<loc>https://calzaclean.com/aviso-de-privacidad</loc>', false);
+        $respuesta->assertSee('<loc>https://calzaclean.com/terminos-y-condiciones</loc>', false);
         $respuesta->assertDontSee('/panel', false);
     }
 

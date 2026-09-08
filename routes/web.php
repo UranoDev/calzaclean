@@ -8,6 +8,11 @@ Route::view('/', 'sitio.inicio')->name('home');
 Route::view('precios', 'sitio.precios')->name('precios');
 Route::view('cuidado-de-tenis', 'sitio.cuidado-de-tenis')->name('cuidado-de-tenis');
 
+// Los dos textos legales. Viven en Blade y no en el Panel: cambian casi nunca
+// y no se editan por accidente.
+Route::view('aviso-de-privacidad', 'sitio.aviso-de-privacidad')->name('aviso-de-privacidad');
+Route::view('terminos-y-condiciones', 'sitio.terminos-y-condiciones')->name('terminos-y-condiciones');
+
 // Los dos archivos que lee un buscador. Se sirven desde una ruta y no desde
 // `public/` para que el dominio salga de la configuración.
 Route::get('sitemap.xml', MapaDelSitioController::class)->name('mapa-del-sitio');

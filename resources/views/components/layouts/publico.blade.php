@@ -32,6 +32,13 @@
         ['href' => route('cuidado-de-tenis'), 'texto' => 'Cuidado de tenis'],
     ];
 
+    // Los dos textos legales van en el pie, en letra chica: se buscan cuando
+    // se necesitan y no compiten con las páginas de arriba.
+    $legales = [
+        ['href' => route('aviso-de-privacidad'), 'texto' => 'Aviso de privacidad'],
+        ['href' => route('terminos-y-condiciones'), 'texto' => 'Términos y condiciones'],
+    ];
+
     // Las redes salen del Negocio: una sin URL no se dibuja, y cargarla desde
     // el Panel la hace aparecer sin tocar esta vista.
     $redes = $negocio->redes;
@@ -158,6 +165,18 @@
                             <li>
                                 <a href="{{ $pagina['href'] }}" class="font-titulo text-menu font-semibold text-white underline-offset-8 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
                                     {{ $pagina['texto'] }}
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </nav>
+
+                <nav aria-label="Privacidad y términos" class="mt-4">
+                    <ul class="flex flex-wrap gap-x-4 gap-y-2">
+                        @foreach ($legales as $legal)
+                            <li>
+                                <a href="{{ $legal['href'] }}" class="text-menu text-white/70 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                                    {{ $legal['texto'] }}
                                 </a>
                             </li>
                         @endforeach
