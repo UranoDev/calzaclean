@@ -183,15 +183,14 @@ class Trabajo extends Model
     }
 
     /**
-     * Del último que se subió al primero. La portada enseña el primero de esta
-     * lista; la rejilla usa el orden que la Dueña acomodó a mano.
-     *
-     * @param  Builder<$this>  $query
+     * El par que enseña la portada: el primero de la lista que esté publicado.
+     * Es el mismo orden que la Dueña acomoda con las flechas del Panel, así
+     * que subir un Trabajo al primer lugar lo pone en la portada. Sin ninguno
+     * publicado devuelve null y la portada usa su imagen de respaldo.
      */
-    #[Scope]
-    protected function recientes(Builder $query): void
+    public static function deLaPortada(): ?self
     {
-        $query->orderByDesc('created_at')->orderByDesc('id');
+        return static::query()->publicados()->ordenados()->first();
     }
 
     /**

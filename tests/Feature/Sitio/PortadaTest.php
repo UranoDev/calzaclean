@@ -94,16 +94,20 @@ class PortadaTest extends TestCase
         $response->assertSee('Entrega en 72 horas', false);
     }
 
-    public function test_la_portada_muestra_el_trabajo_publicado_mas_reciente(): void
+    public function test_la_portada_muestra_el_primer_trabajo_publicado_de_la_lista(): void
     {
-        Trabajo::factory()->create([
-            'titulo' => 'Botas de gamuza',
+        // El más reciente va segundo en la lista: lo que manda es el orden, no
+        // la fecha de alta.
+        $primero = Trabajo::factory()->create([
+            'titulo' => 'Air Force 1 blancos',
+            'material' => Material::Lona,
+            'orden' => 1,
             'created_at' => now()->subWeek(),
         ]);
 
-        $reciente = Trabajo::factory()->create([
-            'titulo' => 'Air Force 1 blancos',
-            'material' => Material::Lona,
+        Trabajo::factory()->create([
+            'titulo' => 'Botas de gamuza',
+            'orden' => 2,
             'created_at' => now(),
         ]);
 
@@ -111,10 +115,40 @@ class PortadaTest extends TestCase
         // hace contra lo que va antes de la sección de Trabajos.
         $portada = $this->portada($this->get(route('home'))->getContent());
 
-        $this->assertStringContainsString($reciente->antes()->webp(Variante::Grande), $portada);
-        $this->assertStringContainsString($reciente->despues()->webp(Variante::Grande), $portada);
+        $this->assertStringContainsString($primero->antes()->webp(Variante::Grande), $portada);
+        $this->assertStringContainsString($primero->despues()->webp(Variante::Grande), $portada);
         $this->assertStringContainsString('Air Force 1 blancos', $portada);
         $this->assertStringNotContainsString('Botas de gamuza', $portada);
+    }
+
+    public function test_subir_un_trabajo_al_primer_lugar_lo_pone_en_la_portada(): void
+    {
+        Trabajo::factory()->create(['titulo' => 'Botas de gamuza', 'orden' => 1]);
+        $segundo = Trabajo::factory()->create(['titulo' => 'Air Force 1 blancos', 'orden' => 2]);
+
+        $antes = $this->portada($this->get(route('home'))->getContent());
+
+        $this->assertStringContainsString('Botas de gamuza', $antes);
+
+        $segundo->mover(-1);
+
+        $despues = $this->portada($this->get(route('home'))->getContent());
+
+        $this->assertStringContainsString('Air Force 1 blancos', $despues);
+        $this->assertStringNotContainsString('Botas de gamuza', $despues);
+    }
+
+    public function test_un_trabajo_sin_publicar_en_el_primer_lugar_no_deja_la_portada_vacia(): void
+    {
+        $borrador = Trabajo::factory()->borrador()->create(['titulo' => 'Todavía sin publicar', 'orden' => 1]);
+        $publicado = Trabajo::factory()->create(['titulo' => 'Air Force 1 blancos', 'orden' => 2]);
+
+        $portada = $this->portada($this->get(route('home'))->getContent());
+
+        $this->assertStringContainsString($publicado->antes()->webp(Variante::Grande), $portada);
+        $this->assertStringContainsString('Air Force 1 blancos', $portada);
+        $this->assertStringNotContainsString($borrador->antes()->webp(Variante::Grande), $portada);
+        $this->assertStringNotContainsString('/img/logo-original.jpeg', $portada);
     }
 
     public function test_un_trabajo_sin_publicar_no_llega_a_la_portada(): void

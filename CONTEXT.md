@@ -40,7 +40,11 @@ lleva su técnica y su producto.
 
 **Trabajo** — un par ya limpiado que se publica en la galería, con su foto de
 **antes** y su foto de **después**, su Material y el Servicio que se le aplicó. Es la
-pieza de contenido que la Dueña sube cada semana y la sección que más vende.
+pieza de contenido que la Dueña sube cada semana y la sección que más vende. La lista
+lleva un orden que la Dueña acomoda con las flechas del Panel, y **el primero de esa
+lista que esté publicado es el que enseña la portada**: uno solo, y elegido a mano.
+Sin ninguno publicado la portada usa su imagen de respaldo. Un Trabajo nuevo entra en
+primera posición, así que por omisión la portada muestra el último que se subió.
 
 **Aviso** — una franja temporal arriba del sitio (vacaciones, cambio de horario,
 promoción). Se enciende y se apaga desde el Panel. **Si no tiene texto, no se

@@ -491,6 +491,14 @@ new class extends Component
             Todavía no hay ningún trabajo cargado.
         </p>
     @else
+        @php
+            $enLaPortada = \App\Models\Trabajo::deLaPortada();
+        @endphp
+
+        <p class="-mb-3 text-menu text-gris-pizarra">
+            Las flechas cambian el orden de la lista. El primero que esté publicado es el que se ve en la portada del sitio.
+        </p>
+
         <ul class="flex flex-col gap-3">
             @foreach ($this->trabajos as $indice => $trabajo)
                 <li wire:key="trabajo-{{ $trabajo->id }}" class="rounded-tarjeta border border-azul-claro-borde bg-white p-4">
@@ -525,9 +533,17 @@ new class extends Component
                                 <p class="mt-1 text-menu text-gris-pizarra">{{ implode(' · ', $detalle) }}</p>
                             @endif
 
-                            <p class="mt-1 text-menu {{ $trabajo->publicado ? 'text-azul-profundo' : 'text-gris-pizarra' }}">
-                                {{ $trabajo->publicado ? 'Publicado' : 'Sin publicar' }}
-                            </p>
+                            <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
+                                <p class="text-menu {{ $trabajo->publicado ? 'text-azul-profundo' : 'text-gris-pizarra' }}">
+                                    {{ $trabajo->publicado ? 'Publicado' : 'Sin publicar' }}
+                                </p>
+
+                                @if ($enLaPortada?->is($trabajo))
+                                    <span class="rounded-suave bg-azul-claro-tenue px-2 py-0.5 text-menu text-azul-profundo">
+                                        En la portada
+                                    </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="flex shrink-0 flex-col gap-1">

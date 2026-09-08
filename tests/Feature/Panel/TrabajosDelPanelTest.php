@@ -291,6 +291,45 @@ class TrabajosDelPanelTest extends TestCase
         $this->assertSame(['El nuevo', 'Primero', 'Tercero', 'Segundo'], $this->ordenActual());
     }
 
+    public function test_la_lista_senala_cual_es_el_trabajo_que_se_ve_en_la_portada(): void
+    {
+        Trabajo::factory()->create(['titulo' => 'Botas de gamuza', 'orden' => 1]);
+        Trabajo::factory()->create(['titulo' => 'Air Force 1 blancos', 'orden' => 2]);
+
+        $componente = Livewire::test('panel.trabajos')
+            ->assertSee('El primero que esté publicado es el que se ve en la portada del sitio.')
+            ->assertSeeInOrder(['Botas de gamuza', 'En la portada', 'Air Force 1 blancos']);
+
+        // La marca es de uno solo: si apareciera en dos renglones no diría nada.
+        $this->assertSame(1, substr_count($componente->html(), 'En la portada'));
+    }
+
+    public function test_la_marca_de_portada_salta_al_primero_que_este_publicado(): void
+    {
+        Trabajo::factory()->borrador()->create(['titulo' => 'Botas de gamuza', 'orden' => 1]);
+        Trabajo::factory()->create(['titulo' => 'Air Force 1 blancos', 'orden' => 2]);
+
+        Livewire::test('panel.trabajos')
+            ->assertSeeInOrder(['Botas de gamuza', 'Air Force 1 blancos', 'En la portada']);
+    }
+
+    public function test_subir_un_trabajo_le_pasa_la_marca_de_portada(): void
+    {
+        Trabajo::factory()->create(['titulo' => 'Botas de gamuza', 'orden' => 1]);
+        $segundo = Trabajo::factory()->create(['titulo' => 'Air Force 1 blancos', 'orden' => 2]);
+
+        Livewire::test('panel.trabajos')
+            ->call('subir', $segundo->id)
+            ->assertSeeInOrder(['Air Force 1 blancos', 'En la portada', 'Botas de gamuza']);
+    }
+
+    public function test_sin_ningun_trabajo_publicado_la_lista_no_marca_ninguna_portada(): void
+    {
+        Trabajo::factory()->borrador()->create(['titulo' => 'Botas de gamuza', 'orden' => 1]);
+
+        Livewire::test('panel.trabajos')->assertDontSee('En la portada');
+    }
+
     public function test_el_formulario_no_ofrece_extras_como_servicio_aplicado(): void
     {
         Servicio::factory()->create(['nombre' => 'Limpieza básica', 'es_extra' => false, 'activo' => true]);

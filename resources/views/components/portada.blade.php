@@ -1,8 +1,9 @@
 @php
-    // El par que enseña la portada es el Trabajo publicado más reciente. Sin
-    // ninguno publicado se dibuja la imagen de respaldo, para que la portada
-    // no arranque con un hueco.
-    $trabajo = \App\Models\Trabajo::query()->publicados()->recientes()->first();
+    // El par que enseña la portada es el primero de la lista de Trabajos que
+    // esté publicado, la misma lista que la Dueña acomoda con las flechas del
+    // Panel. Sin ninguno publicado se dibuja la imagen de respaldo, para que la
+    // portada no arranque con un hueco.
+    $trabajo = \App\Models\Trabajo::deLaPortada();
 
     $senales = [
         [
