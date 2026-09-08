@@ -14,11 +14,11 @@
             'detalle' => ($zonas->isNotEmpty()
                 ? 'Lo traes al taller, en San Juan del Río, o pasamos por él si tu zona está en la lista de abajo. '
                 : 'Lo traes al taller, en San Juan del Río. ')
-                .'La entrega es en 72 horas; con el servicio express, +$100, sale en menos de 24.',
+                .'La entrega es en 72 horas; con el servicio express, +$100, sale en 24 horas.',
         ],
         [
             'titulo' => 'Lo lavamos a mano según el material',
-            'detalle' => 'Cada par se cepilla y se lava a mano. Gamuza, ante, piel, cuero, lona y sintético llevan cada uno su producto.',
+            'detalle' => 'Cada par se cepilla y se lava a mano. Gamuza, ante, piel, cuero, lona y sintético llevan cada uno su proceso especializado.',
         ],
         [
             'titulo' => 'Pasas por tus tenis, completamente renovados',

@@ -51,7 +51,7 @@ class ComoFuncionaTest extends TestCase
     {
         // El plazo se dice al dejar el par, que es cuando la persona pregunta.
         $this->get(route('home'))
-            ->assertSee('La entrega es en 72 horas; con el servicio express, +$100, sale en menos de 24.', false);
+            ->assertSee('La entrega es en 72 horas; con el servicio express, +$100, sale en 24 horas.', false);
     }
 
     public function test_sin_zonas_activas_no_hay_bloque_de_recoleccion(): void
