@@ -135,7 +135,13 @@ sobre blanco como texto, medido con `Tests\Support\Paleta`.
 | --- | --- | --- |
 | Éxito | `#1C7A55` | Confirmaciones: «quedó guardado» |
 | Alerta | `#9A5314` | Advertencias que no impiden seguir |
-| Error | `#B3261E` | Validaciones y fallos |
+| Error | `#B3261E` | Validaciones, fallos y **acciones destructivas** |
+
+**Los botones tienen tres pesos, y el peso es la advertencia.** El **primario** es el
+único relleno sólido de la pantalla. El **secundario** lleva relleno tenue, no borde: un
+borde claro sobre blanco no se lee como botón. El **destructivo** usa el rojo de error —
+tenue en el botón que abre la confirmación, sólido en el que borra de verdad. Un `Borrar`
+que se ve igual que un `Agregar` es un accidente esperando a ocurrir.
 
 No se usan en el Sitio. Y **no se confunden con `verde-accion`**: ese sigue queriendo
 decir «WhatsApp», y si además significara «guardado» dejaría de significar nada.

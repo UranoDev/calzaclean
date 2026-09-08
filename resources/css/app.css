@@ -35,10 +35,15 @@
     --color-azul-profundo-hover: color-mix(in oklab, var(--color-azul-profundo) 86%, black);
     --color-azul-claro-tenue: color-mix(in oklab, var(--color-azul-claro) 20%, white);
     --color-azul-claro-borde: color-mix(in oklab, var(--color-azul-claro) 55%, white);
+    --color-azul-claro-fuerte: color-mix(in oklab, var(--color-azul-claro) 70%, white);
+    --color-azul-claro-medio: color-mix(in oklab, var(--color-azul-claro) 32%, white);
     --color-verde-accion-hover: color-mix(in oklab, var(--color-verde-accion) 86%, black);
     --color-exito-tenue: color-mix(in oklab, var(--color-exito) 12%, white);
     --color-alerta-tenue: color-mix(in oklab, var(--color-alerta) 12%, white);
     --color-error-tenue: color-mix(in oklab, var(--color-error) 12%, white);
+    --color-error-hover: color-mix(in oklab, var(--color-error) 86%, black);
+    --color-error-medio: color-mix(in oklab, var(--color-error) 20%, white);
+    --color-error-borde: color-mix(in oklab, var(--color-error) 34%, white);
 
     /* --- Escala tipográfica --------------------------------------------- */
     --text-rotulo: 0.8125rem;

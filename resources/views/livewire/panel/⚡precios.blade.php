@@ -463,8 +463,9 @@ new class extends Component
                                             <button
                                                 type="button"
                                                 wire:click="borrar('{{ $renglon['clave'] }}')"
-                                                class="flex min-h-11 items-center rounded-pieza bg-azul-profundo px-4 font-titulo text-menu font-semibold text-white"
+                                                class="flex min-h-11 items-center gap-2 rounded-pieza bg-error px-4 font-titulo text-menu font-semibold text-white transition-colors hover:bg-error-hover"
                                             >
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-4 shrink-0"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>
                                                 Borrar
                                             </button>
 
@@ -506,8 +507,9 @@ new class extends Component
                                         <button
                                             type="button"
                                             wire:click="confirmarBorrado('{{ $renglon['clave'] }}')"
-                                            class="flex min-h-11 items-center rounded-pieza border border-azul-claro-borde px-4 font-titulo text-menu font-semibold text-azul-profundo"
+                                            class="flex min-h-11 items-center gap-2 rounded-pieza border border-error-borde bg-error-tenue px-4 font-titulo text-menu font-semibold text-error transition-colors hover:bg-error-medio"
                                         >
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="size-4 shrink-0"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>
                                             Borrar
                                         </button>
                                     </div>
